@@ -8,8 +8,8 @@ return {
   height = 10,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 3,
-  nextobjectid = 1,
+  nextlayerid = 4,
+  nextobjectid = 5,
   properties = {},
   tilesets = {
     {
@@ -92,6 +92,73 @@ return {
         0, 0, 0, 0, 36, 0, 0, 0, 0, 36, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      id = 3,
+      name = "collision",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {
+        ["collidable"] = true
+      },
+      objects = {
+        {
+          id = 1,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 42,
+          y = 43,
+          width = 28,
+          height = 21.25,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 2,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 122.125,
+          y = 43,
+          width = 27.75,
+          height = 21.125,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 3,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 122.125,
+          y = 107,
+          width = 28.125,
+          height = 20.875,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 4,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 42.125,
+          y = 107.125,
+          width = 27.875,
+          height = 20.875,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }

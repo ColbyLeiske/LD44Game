@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="12" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="12" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="5">
  <tileset firstgid="1" source="../tilesheets/BaseTilesheet.tsx"/>
  <layer id="1" name="Tile Layer 1" width="12" height="10">
   <data encoding="csv">
@@ -29,4 +29,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="3" name="collision">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+  <object id="1" x="42" y="43" width="28" height="21.25"/>
+  <object id="2" x="122.125" y="43" width="27.75" height="21.125"/>
+  <object id="3" x="122.125" y="107" width="28.125" height="20.875"/>
+  <object id="4" x="42.125" y="107.125" width="27.875" height="20.875"/>
+ </objectgroup>
 </map>

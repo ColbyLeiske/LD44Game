@@ -1,6 +1,10 @@
-local em = {
-    entityList = {}
-}
+Object = require 'lib.classic.classic'
+
+local em = Object:extend()
+
+function em:new()
+    self.entityList = {}
+end
 
 function em:draw() 
     for k,v in ipairs(self.entityList) do 
