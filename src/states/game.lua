@@ -1,4 +1,5 @@
 entityManager = require 'src.entities.entitymanager'
+GameObject = require 'src.entities.gameobject'
 
 local game = {}
 

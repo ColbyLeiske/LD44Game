@@ -4,13 +4,13 @@ local em = {
 
 function em:draw() 
     for k,v in ipairs(self.entityList) do 
-        if k.draw then k.draw() end
+        v:draw()
     end
 end
 
 function em:update(dt)
     for k,v in ipairs(self.entityList) do 
-        if k.update then k.update(dt) end
+        v:update(dt)
     end
 end
 
