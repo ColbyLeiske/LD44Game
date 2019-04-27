@@ -1,6 +1,9 @@
 entityManager = require 'src.entities.entitymanager'
 GameObject = require 'src.entities.gameobject'
+Player = require 'src.entities.player'
+
 RoomManager = require 'src.rooms.roommanager'
+
 
 local game = {}
 
@@ -10,7 +13,8 @@ function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
-    
+   	local player = Player(100,100,30,30,.5,{})
+    entityManager:addEntity(player)
 end
 
 function game:update(dt)
