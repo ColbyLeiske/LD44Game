@@ -2,6 +2,8 @@ Object = require('lib.classic.classic')
 Timer = require('lib.chrono.Timer')
 Lume = require ('lib.lume.lume')
 
+Input = require('lib.boipushy.Input')
+
 local GameObject = Object:extend()
 
 function GameObject:new(x, y, opts)
@@ -19,7 +21,6 @@ function GameObject:update(dt)
 end
 
 function GameObject:draw()
-    love.graphics.rectangle("fill",self.x,self.y,50,50)
 end
 
 return GameObject
