@@ -19,7 +19,6 @@ function GameObject:update(dt)
 end
 
 function GameObject:draw()
-    love.graphics.rectangle("fill",self.x,self.y,50,50)
 end
 
 return GameObject
