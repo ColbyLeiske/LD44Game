@@ -4,6 +4,8 @@
 -- @copyright 2019
 -- @license MIT/X11
 
+Constants = require 'src.util.gameconstants'
+
 local lg = require((...):gsub('plugins.bump', 'graphics'))
 
 return {
@@ -121,10 +123,10 @@ return {
 							local t = {
 								name       = obj.name,
 								type       = obj.type,
-								x          = obj.x + map.offsetx,
-								y          = obj.y + map.offsety,
-								width      = obj.width,
-								height     = obj.height,
+								x          = (obj.x + map.offsetx)*Constants.windowScaleFactor,
+								y          = (obj.y + map.offsety)*Constants.windowScaleFactor,
+								width      = obj.width*Constants.windowScaleFactor,
+								height     = obj.height*Constants.windowScaleFactor,
 								layer      = layer,
 								properties = obj.properties
 							}
