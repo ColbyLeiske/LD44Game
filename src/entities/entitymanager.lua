@@ -15,6 +15,7 @@ function em:update(dt)
 end
 
 function em:addEntity(entity) 
+	entity.entityManager = self
     table.insert(self.entityList, entity)
 end
 
