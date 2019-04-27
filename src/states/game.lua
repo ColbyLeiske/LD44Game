@@ -1,22 +1,26 @@
 entityManager = require 'src.entities.entitymanager'
 GameObject = require 'src.entities.gameobject'
+RoomManager = require 'src.rooms.roommanager'
 
 local game = {}
+
+local rM = RoomManager(4,4)
 
 function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
-    local testGameObject = GameObject(50,50,{})
-    entityManager:addEntity(testGameObject)
+    
 end
 
 function game:update(dt)
    entityManager:update(dt)
+   rM:update(dt)
 end
 
 function game:draw()
     entityManager:draw()
+    rM:draw()
 end
 
 function game:keypressed(key) 
