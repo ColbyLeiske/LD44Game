@@ -30,6 +30,7 @@ function roommanager:new(mapWidth,mapHeight)
 
     self.mapLayout[self.currentMap.y][self.currentMap.x] = Room(1) -- spawn
     self.mapLayout[self.currentMap.y + 1][self.currentMap.x] = Room(2) -- testing room 2
+    self.mapLayout[self.currentMap.y][self.currentMap.x +1] = Room(2) -- testing room 2
 
 end
 
