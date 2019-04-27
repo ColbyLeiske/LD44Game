@@ -4,7 +4,6 @@ Player = require 'src.entities.player'
 
 RoomManager = require 'src.rooms.roommanager'
 
-
 local game = {}
 
 local rM = RoomManager(4,4)
@@ -13,8 +12,8 @@ function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
-   	local player = Player(100,100,30,30,.5,{})
-    entityManager:addEntity(player)
+   	--local player = Player(100,100,30,30,.5,{})
+    --entityManager:addEntity(player)
 end
 
 function game:update(dt)
@@ -30,6 +29,18 @@ end
 function game:keypressed(key) 
    if key == 'q' then
     love.event.quit()
+   end
+   if key == 's' then
+    rM:changeRoom(0,1)
+   end
+   if key == 'w' then
+    rM:changeRoom(0,-1)
+   end
+   if key == 'd' then
+    rM:changeRoom(1,0)
+   end
+   if key == 'a' then
+    rM:changeRoom(-1,0)
    end
 end
 
