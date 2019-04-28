@@ -1,16 +1,19 @@
 Gamestate = require "lib.hump.gamestate"
 logger = require "src.util.logger"
 Sprites = require 'src.util.spriteloader'
+PlayerInputManager = require 'src.entities.playerinputmanager'
+
 function love.load()
     logger:log("Starting up", logger.MISC)
 
     Sprites:loadSprites()
 
-
     leaderboard = require "src.states.leaderboard"
     game = require "src.states.game"
+    menu = require "src.states.menu"
 
     Gamestate.registerEvents()
-    Gamestate.switch(game)
-end
+    PlayerInputManager:init()
 
+    Gamestate.switch(menu)
+end

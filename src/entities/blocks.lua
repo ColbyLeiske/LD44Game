@@ -180,5 +180,14 @@ local Blocks = {
 		},
 		blockSprite = Sprites.oliveBlock
 	},--Z lol
+	TShape = {
+		blocks = {
+			Vector(-1,0),
+			Vector(0,0),
+			Vector(1,0),
+			Vector(0,1),
+		},
+		blockSprite = Sprites.greenBlock
+	}
 }
 return Blocks

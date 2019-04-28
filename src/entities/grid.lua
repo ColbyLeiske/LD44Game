@@ -1,7 +1,13 @@
 Blocks = require 'src.entities.blocks'
 PlayerBlock = require 'src.entities.playerblock'
+PlayerBlockManager = require 'src.entities.playerblockmanager'
+PlayerInputManager = require 'src.entities.playerinputmanager'
 Input = require 'lib.boipushy.input'
 lume = require 'lib.lume.lume'
+sprites = require 'src.util.spriteloader'
+Vector = require 'lib.hump.vector'
+ScoreManager = require 'src.entities.scoremanager'
+Keybinds = require 'src.states.keybinds'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -15,11 +21,8 @@ local Grid = {
 }
 
 function Grid:initGrid()
-	self.input = Input()
-	self.input:bind('a','left')
-	self.input:bind('d','right')
-	self.input:bind('s','soft')
-	self.input:bind('w','hard')
+	PlayerBlockManager:init() -- get the manager ready for block manipulation
+	ScoreManager:init()
 
 	self.input:bind('.', 'counterClockwise')
 	self.input:bind('/', 'clockwise')
@@ -40,19 +43,25 @@ function Grid:initGrid()
 	end
 
 	self:newPlayerBlock() -- for testing
-
+	font = love.graphics.newFont(10)
+	font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(font)
+	
+	menu = require 'src.states.menu'
 end
 
 function Grid:update(dt)
-	if self.input:down('soft', 0.12) then self:movePlayerBlockDown() end
-	if self.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
-	if self.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
-	if self.input:pressed('hard') then 
+
+	if PlayerInputManager.input:down('soft', 0.12) then self:movePlayerBlockDown() end
+	if PlayerInputManager.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
+	if PlayerInputManager.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
+	if PlayerInputManager.input:pressed('hard') then 
 		for i=1,Constants.gridHeight do
 			self:movePlayerBlockDown()
 		end
 		self:placePlayerBlock()
 	end
+	self:checkForCompletedLines()
 
 	if self.input:pressed('counterClockwise') then self:rotate(-1) end
 	if self.input:pressed('clockwise') then self:rotate(1) end
@@ -65,13 +74,17 @@ function Grid:update(dt)
 end
 
 function Grid:tick()
-	self:checkForCompletedLines()
-
 	if self.playerBlock then 
 		didMove = self:movePlayerBlockDown() 
 	end
+	--print(self.playerBlock.origin.y)
 	if didMove == false then
+		if self.playerBlock.origin.y == 1 then
+			Gamestate.switch(menu)
+		end
 		self:placePlayerBlock()
+		
+		
 	end
 
 	--self:fixStraglers()
@@ -79,19 +92,41 @@ end
 
 function Grid:draw()
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
+	love.graphics.draw(sprites.gamebackground,0,0)
 
+	love.graphics.print(ScoreManager.score,20,5) -- render score
+												 -- render time left
+	--render game board
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
 			if self.grid[j][i].occupied then
-				love.graphics.draw(self.grid[j][i].BlockType.blockSprite,(i-1)*Constants.tileWidth,(j-1-Constants.gridHeightBuffer)*Constants.tileHeight)
+				love.graphics.draw(self.grid[j][i].BlockType.blockSprite,(i-1)*Constants.tileWidth + (Constants.gameLeftOffset * Constants.tileWidth),(j-1-Constants.gridHeightBuffer)*Constants.tileHeight)
 			end
 		end
 	end
+
+	--render queue of blocks ahead
+	--love.graphics.draw(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue].blockSprite,50,50)
+	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue],Vector(18,1))
+
+	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
+		self:DrawShape(PlayerBlockManager.blockQueue[i],Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
+	end
+end
+
+function Grid:DrawShape(blockType,origin) 
+	for k,v in pairs(blockType.blocks) do
+		blockPos = v + origin
+		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth,blockPos.y * Constants.tileHeight)
+	end
+
 end
 
 function Grid:newPlayerBlock() 
-	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),Blocks.LLeft)
-	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
+
+	blockShape = PlayerBlockManager:popLatestBlock()
+	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),blockShape)
+	for k,v in pairs(self.playerBlock.blockType.blocks) do
 		blockPos = v + self.playerBlock.origin
 		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
 	end
@@ -209,7 +244,6 @@ function Grid:checkForCompletedLines()
 			if self.grid[i][j].occupied == true and self.grid[i][j].isPlayerBlock == false then totalBlocks = totalBlocks + 1 end
 		end
 		if totalBlocks >= Constants.gridWidth then
-			print("added line " .. i)
 			table.insert(rowsToDelete,i)
 		end
 	end
@@ -221,50 +255,10 @@ function Grid:checkForCompletedLines()
 				newLine[col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
 			end
 			table.remove(self.grid,v)
-			table.insert( self.grid,5,newLine )
-			for i=1,5 do	
-				for col=1, Constants.gridWidth do
-					self.grid[i][col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
-				end
-			end
-			print("woohoo line cleared " .. v)
+			table.insert(self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
+			ScoreManager:clearedLine()
 		end
 	end
-end
-
-function Grid:fixStraglers() 
-	surroundingBlocks = 0
-	for i=1,Constants.gridHeight do
-		for j=1,Constants.gridWidth do
-			if self.grid[i][j].isPlayerBlock == true then 
-				if i-1 > 0 then
-					if self.grid[i-1][j].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if j-1 > 0 then if self.grid[i-1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if j+1 <= Constants.gridHeight then if self.grid[i-1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if i+1 <= Constants.gridWidth then
-					if self.grid[i+1][j].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if j-1 > 0 then if self.grid[i+1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if j+1 <= Constants.gridHeight then if self.grid[i+1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if j-1 > 0 then
-					if self.grid[i][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if i-1 > 0 then if self.grid[i-1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if i+1 <= Constants.gridWidth then if self.grid[i+1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if j+1 <= Constants.gridHeight then
-					if self.grid[i][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if i-1 > 0 then if self.grid[i-1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if i+1 <= Constants.gridWidth then if self.grid[i+1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-			 end
-		end
-	end
-
-	if surroundingBlocks == 0 then
-		print('potential floater found')
-	end
-
 end
 
 return Grid
