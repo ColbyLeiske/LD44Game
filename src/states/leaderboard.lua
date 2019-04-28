@@ -42,10 +42,10 @@ function leaderboard:draw()
     love.graphics.setColor(Colors.darkGreen)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), self.topBannerHeight)
 
-    love.graphics.setColor(Colors.lightBlue)
+    love.graphics.setColor(Colors.lightBrown)
     love.graphics.rectangle("fill", 0, self.topBannerHeight, love.graphics.getWidth()/2, love.graphics.getHeight())
 
-    love.graphics.setColor(Colors.lightBlue)
+    love.graphics.setColor(Colors.lightBrown)
     love.graphics.rectangle("fill", love.graphics.getWidth()/2, self.topBannerHeight, love.graphics.getWidth()/2, love.graphics.getHeight())
 
     love.graphics.draw(sprites.leaderboard,(love.graphics.getWidth()) - (sprites.leaderboard:getWidth()),50,0,.95,.95)
@@ -54,7 +54,7 @@ function leaderboard:draw()
         local nameWidth = self.font:getWidth(v.name)
         local scoreWidth = self.font:getWidth(v.score)
 
-        love.graphics.setColor(135/255, 85/255, 133/255)
+        love.graphics.setColor(Colors.darkPurple)
         love.graphics.print(i .. " " .. v.name, (love.graphics.getWidth()/2) - nameWidth - 60, 125 + (i*40))
         love.graphics.print(v.score, (love.graphics.getWidth()/2) - scoreWidth + 115, 125 + (i * 40))
         i = i + 1
