@@ -1,40 +1,60 @@
+Sprites = require 'src.util.spriteloader'
+
 local Blocks = {
 	None = {},
 	LLeft = {
-		Vector(0, 0),
-		Vector(0, 1),
-		Vector(0, 2),
-		Vector(1, 2)
+		blocks = {
+			Vector(0, 0),
+			Vector(0, 1),
+			Vector(0, 2),
+			Vector(1, 2),
+		},
+		blockSprite = Sprites.blueBlock
 	},
 	LRight = {
-		Vector(1,0),
-		Vector(1,1),
-		Vector(1,2),
-		Vector(0,2),
+		blocks = {
+			Vector(1,0),
+			Vector(1,1),
+			Vector(1,2),
+			Vector(0,2),
+		},
+		blockSprite = Sprites.brownBlock
 	},
 	Straight = {
-		Vector(0,0),
-		Vector(0,1),
-		Vector(0,2),
-		Vector(0,3),
+		blocks = {
+			Vector(0,0),
+			Vector(0,1),
+			Vector(0,2),
+			Vector(0,3),
+		},
+		blockSprite = Sprites.lightBlueBlock
 	},
 	Square = {
-		Vector(0,0),
-		Vector(1,1),
-		Vector(0,1),
-		Vector(1,0),
+		blocks = {
+			Vector(0,0),
+			Vector(1,1),
+			Vector(0,1),
+			Vector(1,0),
+		},
+		blockSprite = Sprites.tanBlock
 	},
 	SLeft = {
-		Vector(0,1),
-		Vector(1,1),
-		Vector(1,0),
-		Vector(2,0),
+		blocks = {
+			Vector(0,1),
+			Vector(1,1),
+			Vector(1,0),
+			Vector(2,0),
+		},
+		blockSprite = Sprites.redBlock
 	},
 	SRight = {
-		Vector(0,0),
-		Vector(1,0),
-		Vector(1,1),
-		Vector(2,1),
+		blocks = {
+			Vector(0,0),
+			Vector(1,0),
+			Vector(1,1),
+			Vector(2,1),
+		},
+		blockSprite = Sprites.oliveBlock
 	},--Z lol
 }
 return Blocks
