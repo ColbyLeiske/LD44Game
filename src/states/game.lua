@@ -1,7 +1,7 @@
 entityManager = require 'src.entities.entitymanager'
 GameObject = require 'src.entities.gameobject'
-Player = require 'src.entities.player'
-
+Enemy = require 'src.entities.enemy'
+Vector = require 'lib.hump.vector'
 RoomManager = require 'src.rooms.roommanager'
 
 local game = {}
@@ -12,8 +12,8 @@ function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
-   	--local player = Player(100,100,30,30,.5,{})
-    --entityManager:addEntity(player)
+   	local enemy = Enemy(Vector(50,50),{})
+    entityManager:addEntity(enemy)
 end
 
 function game:update(dt)
@@ -26,7 +26,7 @@ function game:draw()
     rM:draw()
 end
 
-function game:keypressed(key) 
+function game:keypressed(key)
    if key == 'q' then
     love.event.quit()
    end

@@ -6,6 +6,5 @@ function love.load()
     menu = require "src.states.menu"
     game = require "src.states.game"
     Gamestate.registerEvents()
-    Gamestate.switch(game)
+    Gamestate.switch(menu)
 end
-
