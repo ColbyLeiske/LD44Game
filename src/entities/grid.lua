@@ -24,6 +24,9 @@ function Grid:initGrid()
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
 
+	self.input:bind('.', 'counterClockwise')
+	self.input:bind('/', 'clockwise')
+
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
 		for col=1, Constants.gridWidth do
@@ -60,6 +63,9 @@ function Grid:update(dt)
 	end
 	self:checkForCompletedLines()
 
+	if self.input:pressed('counterClockwise') then self:rotate(-1) end
+	if self.input:pressed('clockwise') then self:rotate(1) end
+
 	self.currentTime = love.timer.getTime()
 	if self.currentTime - self.startTime >= self.timerThreshold then
 		self:tick()
@@ -90,7 +96,6 @@ function Grid:draw()
 
 	love.graphics.print(ScoreManager.score,20,5) -- render score
 												 -- render time left
-
 	--render game board
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
@@ -118,6 +123,7 @@ function Grid:DrawShape(blockType,origin)
 end
 
 function Grid:newPlayerBlock() 
+
 	blockShape = PlayerBlockManager:popLatestBlock()
 	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),blockShape)
 	for k,v in pairs(self.playerBlock.blockType.blocks) do
@@ -130,14 +136,14 @@ end
 function Grid:movePlayerBlockDown()
 	origin = self.playerBlock.origin
 	placesToCheck = {}
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		v = origin + v + Vector(0,1)
 		if v.y > Constants.gridHeight then return false end
 		if self.grid[v.y][v.x].occupied == true and self.grid[v.y][v.x].isPlayerBlock == false then return false end
 		
 	end
 	--breaks when i move it up to the top for loop lol
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		blockPos = origin + v
 		if self.grid[blockPos.y][blockPos.x].newlyPlaced == false then
 			self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
@@ -146,7 +152,7 @@ function Grid:movePlayerBlockDown()
 	end
 
 	self.playerBlock.origin = self.playerBlock.origin + Vector(0,1)
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		blockPos = self.playerBlock.origin + v
 		self.grid[blockPos.y][blockPos.x].newlyPlaced = false
 	end
@@ -155,14 +161,14 @@ end
 function Grid:movePlayerBlockXAxis(movementAxis)
 	origin = self.playerBlock.origin
 	placesToCheck = {}
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		v = origin + v + movementAxis
 		if v.x > Constants.gridWidth or v.x <= 0 then return false end
 		if self.grid[v.y][v.x].occupied == true and self.grid[v.y][v.x].isPlayerBlock == false then return false end
 		
 	end
 	--breaks when i move it up to the top for loop lol
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		blockPos = origin + v
 		if self.grid[blockPos.y][blockPos.x].newlyPlaced == false then
 			self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
@@ -171,14 +177,58 @@ function Grid:movePlayerBlockXAxis(movementAxis)
 	end
 
 	self.playerBlock.origin = self.playerBlock.origin + movementAxis
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		blockPos = self.playerBlock.origin + v
 		self.grid[blockPos.y][blockPos.x].newlyPlaced = false
 	end
 end
 
+function Grid:rotate(rotationDirection)
+	index = self.playerBlock.blockType.currentRotation + rotationDirection
+	if index == 0 then index = 4 
+	else if index == 5 then index = 1 end end
+	origin = self.playerBlock.origin
+	print(index)
+	
+	--are any places occupied? if so, rotate cannot happen
+	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+		blockPos = origin + v
+		if self.grid[blockPos.y][blockPos.x] == nil then 
+			if blockPos.x < 1 then 
+				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+					self.playerBlock.origin.x = self.playerBlock.origin.x+1 
+				end
+			else 
+				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+					self.playerBlock.origin.x = self.playerBlock.origin.x-1 
+				end 
+			end
+			print('there is a wall') 
+			blockPos = origin+v
+		end
+		if self.grid[blockPos.y][blockPos.x].occupied and self.grid[blockPos.y][blockPos.x].isPlayerBlock == false then 
+			print('occupied ... cannot rotate') 
+			return
+		end
+	end
+
+	--Delete old blocks
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
+		blockPos = origin + v
+		self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
+	end
+
+	--Rotate block
+	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+		blockPos = origin + v
+		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
+	end
+
+	self.playerBlock.blockType.currentRotation = index
+end
+
 function Grid:placePlayerBlock()
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		v = origin + v
 		self.grid[v.y][v.x].isPlayerBlock = false
 		self.grid[v.y][v.x].BlockType = self.playerBlock.blockType		
