@@ -1,4 +1,8 @@
+
 Sprites = require 'src.util.spriteloader'
+Constants = require('src.util.gameconstants')
+Vector = require 'lib.hump.vector'
+Grid = require 'src.entities.grid'
 
 local game = {}
 
@@ -6,16 +10,18 @@ function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
+
     love.graphics.setDefaultFilter('nearest','nearest',1)
     Sprites:loadSprites()
+    Grid:initGrid()
 end
 
 function game:update(dt)
-   
+	Grid:update(dt)
 end
 
 function game:draw()
-
+	Grid:draw()
 end
 
 function game:keypressed(key) 
