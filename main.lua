@@ -7,6 +7,6 @@ function love.load()
     game = require "src.states.game"
 
     Gamestate.registerEvents()
-    Gamestate.switch(game)
+    Gamestate.switch(leaderboard)
 end
 
