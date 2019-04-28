@@ -5,7 +5,12 @@ local constants = {
 
     gridHeightBuffer = 4,
     gridHeight = 20 + 4,
-    gridWidth = 10
+    gridWidth = 10,
+
+    windowHeightBuffer = 2,
+    windowWidthBuffer = 12,
+
+    gameLeftOffset = 6
 }
 
 

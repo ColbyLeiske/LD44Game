@@ -6,7 +6,6 @@ function love.load()
 
     Sprites:loadSprites()
 
-
     leaderboard = require "src.states.leaderboard"
     game = require "src.states.game"
 
