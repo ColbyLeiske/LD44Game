@@ -21,6 +21,8 @@ local buttonMargin = 25
 function menu:init()
   credits = require 'src.states.credits'
   keybinds = require 'src.states.keybinds'
+  game = require 'src.states.game'
+
 end
 
 function menu:enter()
@@ -28,7 +30,7 @@ function menu:enter()
   self.input:bind('mouse1', 'left_click')
   font = love.graphics.newFont(32)
 
-  buttons[1] = newButton("Start Game" , function() print("Starting game") end)
+  buttons[1] = newButton("Start Game" , function() Gamestate.switch(game) end)
   buttons[2] = newButton("Keybinds" , function() Gamestate.switch(keybinds) end)
   buttons[3] = newButton("Credits" , function() Gamestate.switch(credits) end)
   buttons[4] = newButton("Exit" ,function() love.event.quit(0) end)

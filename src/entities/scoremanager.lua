@@ -1,4 +1,3 @@
-beholder = require 'lib.beholder.beholder'
 
 local ScoreManager = {}
 

@@ -8,6 +8,7 @@ function love.load()
 
     leaderboard = require "src.states.leaderboard"
     game = require "src.states.game"
+    menu = require "src.states.menu"
 
     Gamestate.registerEvents()
     Gamestate.switch(menu)
