@@ -12,8 +12,10 @@ function spriteloader:loadSprites()
     self.oliveBlock = love.graphics.newImage("res/raw_sprites/png/tetrisblockolive.png")
     self.redBlock = love.graphics.newImage("res/raw_sprites/png/tetrisblockred.png")
     self.tanBlock = love.graphics.newImage("res/raw_sprites/png/tetrisblocktan.png")
+    self.greyBlock = love.graphics.newImage("res/raw_sprites/png/tetrisblockgrey.png")
 
     self.leaderboard = love.graphics.newImage("res/raw_sprites/png/leaderboard.png")
+    self.gamebackground = love.graphics.newImage('res/raw_sprites/png/gamebackground.png')
     self.hasLoaded = true
 end
 

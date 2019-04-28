@@ -2,6 +2,7 @@ Blocks = require 'src.entities.blocks'
 PlayerBlock = require 'src.entities.playerblock'
 Input = require 'lib.boipushy.input'
 lume = require 'lib.lume.lume'
+sprites = require 'src.util.spriteloader'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -41,6 +42,7 @@ function Grid:initGrid()
 end
 
 function Grid:update(dt)
+
 	if self.input:down('soft', 0.12) then self:movePlayerBlockDown() end
 	if self.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
 	if self.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
@@ -50,6 +52,7 @@ function Grid:update(dt)
 		end
 		self:placePlayerBlock()
 	end
+	self:checkForCompletedLines()
 
 	self.currentTime = love.timer.getTime()
 	if self.currentTime - self.startTime >= self.timerThreshold then
@@ -59,8 +62,6 @@ function Grid:update(dt)
 end
 
 function Grid:tick()
-	self:checkForCompletedLines()
-
 	if self.playerBlock then 
 		didMove = self:movePlayerBlockDown() 
 	end
@@ -73,7 +74,7 @@ end
 
 function Grid:draw()
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
-
+	love.graphics.draw(sprites.gamebackground,0,0)
 	-- for col=1, Constants.gridWidth do
 	-- 	love.graphics.line(Constants.tileWidth*col, 0, Constants.tileWidth*col, love.graphics.getHeight())
 	-- end
@@ -85,7 +86,7 @@ function Grid:draw()
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
 			if self.grid[j][i].occupied then
-				love.graphics.draw(self.grid[j][i].BlockType.blockSprite,(i-1)*Constants.tileWidth,(j-1-Constants.gridHeightBuffer)*Constants.tileHeight)
+				love.graphics.draw(self.grid[j][i].BlockType.blockSprite,(i-1)*Constants.tileWidth + (Constants.gameLeftOffset * Constants.tileWidth),(j-1-Constants.gridHeightBuffer)*Constants.tileHeight)
 			end
 		end
 	end
@@ -179,50 +180,10 @@ function Grid:checkForCompletedLines()
 				newLine[col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
 			end
 			table.remove(self.grid,v)
-			table.insert( self.grid,5,newLine )
-			for i=1,5 do	
-				for col=1, Constants.gridWidth do
-					self.grid[i][col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
-				end
-			end
+			table.insert( self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
 			print("woohoo line cleared " .. v)
 		end
 	end
-end
-
-function Grid:fixStraglers() 
-	surroundingBlocks = 0
-	for i=1,Constants.gridHeight do
-		for j=1,Constants.gridWidth do
-			if self.grid[i][j].isPlayerBlock == true then 
-				if i-1 > 0 then
-					if self.grid[i-1][j].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if j-1 > 0 then if self.grid[i-1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if j+1 <= Constants.gridHeight then if self.grid[i-1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if i+1 <= Constants.gridWidth then
-					if self.grid[i+1][j].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if j-1 > 0 then if self.grid[i+1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if j+1 <= Constants.gridHeight then if self.grid[i+1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if j-1 > 0 then
-					if self.grid[i][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if i-1 > 0 then if self.grid[i-1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if i+1 <= Constants.gridWidth then if self.grid[i+1][j-1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-				if j+1 <= Constants.gridHeight then
-					if self.grid[i][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end
-					if i-1 > 0 then if self.grid[i-1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-					if i+1 <= Constants.gridWidth then if self.grid[i+1][j+1].occupied == false then surroundingBlocks = surroundingBlocks + 1 end end
-				end
-			 end
-		end
-	end
-
-	if surroundingBlocks == 0 then
-		print('potential floater found')
-	end
-
 end
 
 return Grid
