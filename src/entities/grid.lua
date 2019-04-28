@@ -1,8 +1,11 @@
 Blocks = require 'src.entities.blocks'
 PlayerBlock = require 'src.entities.playerblock'
+PlayerBlockManager = require 'src.entities.playerblockmanager'
 Input = require 'lib.boipushy.input'
 lume = require 'lib.lume.lume'
 sprites = require 'src.util.spriteloader'
+Vector = require 'lib.hump.vector'
+ScoreManager = require 'src.entities.scoremanager'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -22,6 +25,9 @@ function Grid:initGrid()
 	self.input:bind('s','soft')
 	self.input:bind('w','hard')
 
+	PlayerBlockManager:init() -- get the manager ready for block manipulation
+	ScoreManager:init()
+
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
 		for col=1, Constants.gridWidth do
@@ -38,7 +44,9 @@ function Grid:initGrid()
 	end
 
 	self:newPlayerBlock() -- for testing
-
+	font = love.graphics.newFont(10)
+	font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(font)
 end
 
 function Grid:update(dt)
@@ -75,14 +83,11 @@ end
 function Grid:draw()
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
 	love.graphics.draw(sprites.gamebackground,0,0)
-	-- for col=1, Constants.gridWidth do
-	-- 	love.graphics.line(Constants.tileWidth*col, 0, Constants.tileWidth*col, love.graphics.getHeight())
-	-- end
 
-	-- for row=1, Constants.gridHeight do
-	-- 	love.graphics.line(0, Constants.tileHeight*row, love.graphics.getWidth(), Constants.tileHeight*row)
-	-- end
+	love.graphics.print(ScoreManager.score,20,5) -- render score
+												 -- render time left
 
+	--render game board
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
 			if self.grid[j][i].occupied then
@@ -90,10 +95,27 @@ function Grid:draw()
 			end
 		end
 	end
+
+	--render queue of blocks ahead
+	--love.graphics.draw(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue].blockSprite,50,50)
+	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue],Vector(18,1))
+
+	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
+		self:DrawShape(PlayerBlockManager.blockQueue[i],Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
+	end
+end
+
+function Grid:DrawShape(blockType,origin) 
+	for k,v in pairs(blockType.blocks) do
+		blockPos = v + origin
+		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth,blockPos.y * Constants.tileHeight)
+	end
+
 end
 
 function Grid:newPlayerBlock() 
-	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),Blocks.Straight)
+	blockShape = PlayerBlockManager:popLatestBlock()
+	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),blockShape)
 	for k,v in pairs(self.playerBlock.blockType.blocks) do
 		blockPos = v + self.playerBlock.origin
 		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
@@ -168,7 +190,6 @@ function Grid:checkForCompletedLines()
 			if self.grid[i][j].occupied == true and self.grid[i][j].isPlayerBlock == false then totalBlocks = totalBlocks + 1 end
 		end
 		if totalBlocks >= Constants.gridWidth then
-			print("added line " .. i)
 			table.insert(rowsToDelete,i)
 		end
 	end
@@ -181,7 +202,7 @@ function Grid:checkForCompletedLines()
 			end
 			table.remove(self.grid,v)
 			table.insert( self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
-			print("woohoo line cleared " .. v)
+			ScoreManager:clearedLine()
 		end
 	end
 end
