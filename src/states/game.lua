@@ -1,4 +1,3 @@
-
 Constants = require('src.util.gameconstants')
 Vector = require 'lib.hump.vector'
 Grid = require 'src.entities.grid'
@@ -21,7 +20,7 @@ function game:draw()
 	Grid:draw()
 end
 
-function game:keypressed(key) 
+function game:keypressed(key)
    if key == 'q' then
     love.event.quit()
    end

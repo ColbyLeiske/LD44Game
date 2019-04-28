@@ -1,8 +1,5 @@
-Input = require('lib.boipushy.Input')
-local keybinds
-local credits
-
-local menu = {}
+local menu
+local credits = {}
 local buttons = {}
 
 local font = nil
@@ -13,28 +10,24 @@ local window_height = love.graphics.getHeight()
 
 local button_height = 50
 local button_width = window_width * (1/3)
-local buttonStartY = 280 -- we will change this
+local buttonStartY = 150 -- we will change this
 local buttonStartX = (window_width * 0.5) - (button_width * 0.5)
 local buttonMargin = 25
 
-
-function menu:init()
-  credits = require 'src.states.credits'
-  keybinds = require 'src.states.keybinds'
+function credits:init()
+  menu = require 'src.states.menu'
 end
 
-function menu:enter()
+
+function credits:enter()
   self.input = Input()
   self.input:bind('mouse1', 'left_click')
   font = love.graphics.newFont(32)
 
-  buttons[1] = newButton("Start Game" , function() print("Starting game") end)
-  buttons[2] = newButton("Keybinds" , function() Gamestate.switch(keybinds) end)
-  buttons[3] = newButton("Credits" , function() Gamestate.switch(credits) end)
-  buttons[4] = newButton("Exit" ,function() love.event.quit(0) end)
+  buttons[1] = newButton("Back" , function() Gamestate.switch(menu) end)
 end
 
-function menu:update(dt)
+function credits:update()
   for k, button in ipairs(buttons) do
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     local mousex, mousey = love.mouse.getPosition()
@@ -45,8 +38,7 @@ function menu:update(dt)
   end
 end
 
-
-function menu:draw()
+function credits:draw()
   for k, button in ipairs(buttons) do
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     --color that displays when the cursor is over the button
@@ -77,4 +69,4 @@ function newButton(text, fn)
 end
 
 
-return menu
+return credits
