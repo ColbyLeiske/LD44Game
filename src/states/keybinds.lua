@@ -14,6 +14,11 @@ local buttonStartY = 60-- we will change this
 local buttonStartX = (window_width * 0.5) - (button_width * 0.5)
 local buttonMargin = 25
 local bindNextKeyPress = {check=false, inputAction=''}
+local buttonExists = false
+local originalKey
+local waitingForBind = '...'
+local stillWaiting = false
+
 
 local keyActionAssociations = {
   ['left'] = 'a',
@@ -29,7 +34,6 @@ function keybinds:init()
   menu = require 'src.states.menu'
     self.input = Input()
     self.input:bind('mouse1', 'left_click')
-
   for k,v in pairs(keyActionAssociations) do
     self.input:bind(v,k)
   end
@@ -48,7 +52,9 @@ function keybinds:enter()
 end
 
 function keybinds:setupNewKeybind(prevKey,inputAction)
+  originalKey = prevKey
   self.input:unbind(prevKey)
+  stillWaiting = true
   bindNextKeyPress = {check = true, inputAction = inputAction }
   print('Preparing for new keybind with PREV: '.. prevKey .. ' with ACTION: '.. inputAction)
 end
@@ -58,15 +64,27 @@ function keybinds:update()
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     local mousex, mousey = love.mouse.getPosition()
     button.active = mousex > buttonStartX and mousex < buttonStartX + button_width and mousey > buttony and mousey < buttony + button_height
-    if self.input:pressed('left_click') and button.active then
+    if self.input:pressed('left_click') and button.active and stillWaiting == false then
       button.fn()
     end
   end
+
+--testing
+    if self.input:pressed('right') then
+      print("right")
+    elseif self.input:pressed('left') then
+      print("left")
+    end
+
 end
 
 function keybinds:draw()
-
   for k, button in ipairs(buttons) do
+
+    if stillWaiting and keyActionAssociations[button.inputAction] == originalKey then
+      keyActionAssociations[button.inputAction] = waitingForBind
+    end
+
     local printValue = (keyActionAssociations[button.inputAction])
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     --color that displays when the cursor is over the button
@@ -83,13 +101,24 @@ function keybinds:draw()
     love.graphics.setColor(0,0,0,1)
     local textW = font:getWidth(button.text)
     local textH = font:getHeight(button.text)
-    love.graphics.print(printValue, font, (window_width * 0.5) - textW * 0.5, buttony + (textH * 0.2)) --warning for this)
+
+    love.graphics.print(printValue, font, (window_width * 0.5), buttony + (textH * 0.2)) --warning for this)
     love.graphics.setColor(1,1,1,1)
   end
 end
 
 function keybinds:keyreleased(key)
-  if bindNextKeyPress.check then
+  for k,v in pairs(keyActionAssociations) do
+    if (key == v) and (key ~= originalKey) then
+      buttonExists = true
+      break
+    else
+      buttonExists = false
+    end
+  end
+
+  if bindNextKeyPress.check and (buttonExists == false) then
+    stillWaiting = false
     self.input:bind(key, bindNextKeyPress.inputAction)
     keyActionAssociations[bindNextKeyPress.inputAction] = key
     bindNextKeyPress.check = false
