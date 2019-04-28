@@ -1,12 +1,11 @@
 Input = require('lib.boipushy.Input')
 GameObject = require 'src.entities.gameobject'
 
-local PlayerBlock = GameObject:extend()
+local StaticBlock = GameObject:extend()
 
 
-function PlayerBlock:new(origin, blockType, opts)
-	PlayerBlock.super.new(self, position, opts)
-
+function StaticBlock:new(origin, blockType, opts)
+	StaticBlock.super.new(self, position, opts)
 	self.input = Input()
 
 	self.width = Constants.tileWidth*Constants.windowScaleFactor
@@ -16,5 +15,5 @@ function PlayerBlock:new(origin, blockType, opts)
 	self.blockType = blockType
 end
 
-return PlayerBlock
+return StaticBlock
 
