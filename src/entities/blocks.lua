@@ -4,92 +4,87 @@ local Blocks = {
 	None = {},
 	LLeft = {
 		currentRotation = 1,
+		drawRotation = 2,
 		blocks = {
 			{
+				Vector(0, -1),
 				Vector(0, 0),
 				Vector(0, 1),
-				Vector(0, 2),
-				Vector(1, 2)},
+				Vector(1, 1)},
 			{
-				Vector(1,1),
-				Vector(0,1),
-				Vector(-1,1),
-				Vector(-1,2)},
+				Vector(-1,0),
+				Vector(0,0),
+				Vector(1,0),
+				Vector(1,-1)},
 			{
-				Vector(0,2),
+				Vector(0,-1),
 				Vector(0,1),
 				Vector(0,0),
-				Vector(-1,0)},
+				Vector(-1,-1)},
 			{
-				Vector(-1,1),
-				Vector(0,1),
-				Vector(1,1),
-				Vector(1,0)},
+				Vector(-1,0),
+				Vector(0,0),
+				Vector(1,0),
+				Vector(-1,1)},
 		},
 		blockSprite = Sprites.blueBlock
 	},
 	LRight = {
 		currentRotation = 1,
+		drawRotation = 2,
+
 		blocks = {
 			{
 				Vector(0,0),
 				Vector(0,1),
-				Vector(0,2),
-				Vector(-1,2),
+				Vector(0,-1),
+				Vector(-1,1),
 			},
 			{
-				Vector(1,2),
-				Vector(0,2),
-				Vector(-1,2),
-				Vector(-1,1)
-			},
-			{
-				Vector(0,2),
-				Vector(0,1),
+				Vector(-1,-1),
 				Vector(0,0),
+				Vector(-1,0),
 				Vector(1,0)
 			},
 			{
-				Vector(-1,1),
 				Vector(0,1),
-				Vector(1,1),
-				Vector(1,2)
+				Vector(1,-1),
+				Vector(0,0),
+				Vector(0,-1)
+			},
+			{
+				Vector(-1,0),
+				Vector(0,0),
+				Vector(1,0),
+				Vector(1,1)
 			},
 		},
 		blockSprite = Sprites.brownBlock
 	},
 	Straight = {
 		currentRotation = 1,
+		drawRotation = 2,
+
 		blocks = {
 			{
 				Vector(0,0),
+				Vector(0,-1),
 				Vector(0,1),
 				Vector(0,2),
-				Vector(0,3),
 			},
 			{
-				Vector(-1,3),
-				Vector(0,3),
-				Vector(1,3),
-				Vector(2,3),
-			},
-			{
+				Vector(-2,0),
 				Vector(0,0),
-				Vector(0,1),
-				Vector(0,2),
-				Vector(0,3),
-			},
-			{
-				Vector(-1,3),
-				Vector(0,3),
-				Vector(1,3),
-				Vector(2,3),
+				Vector(-1,0),
+				Vector(1,0),
 			},
 		},
 		blockSprite = Sprites.lightBlueBlock
 	},
 	Square = {
 		currentRotation = 1,
+		drawRotation = 1,
+
 		blocks = {
 			{
 				Vector(-1,0),
@@ -97,31 +92,13 @@ local Blocks = {
 				Vector(-1,1),
 				Vector(0,0),
 			},
-			{
-				Vector(-1,0),
-				Vector(0,1),
-				Vector(-1,1),
-				Vector(0,0),
-			},
-			{
-				Vector(-1,0),
-				Vector(0,1),
-				Vector(-1,1),
-				Vector(0,0),
-			},
-			{
-				Vector(-1,0),
-				Vector(0,1),
-				Vector(-1,1),
-				Vector(0,0),
-
-			}
-
 		},
 		blockSprite = Sprites.tanBlock
 	},
 	SLeft = {
 		currentRotation = 1,
+		drawRotation = 1,
+
 		blocks = {
 			{
 				Vector(-1,2),
@@ -152,6 +129,8 @@ local Blocks = {
 	},
 	SRight = {
 		currentRotation = 1,
+		drawRotation = 1,
+
 		blocks = {
 			{
 				Vector(-1,1),
@@ -181,11 +160,26 @@ local Blocks = {
 		blockSprite = Sprites.oliveBlock
 	},--Z lol
 	TShape = {
+		currentRotation = 1,
+		drawRotation = 1,
+
 		blocks = {
-			Vector(-1,0),
+			{Vector(-1,0),
 			Vector(0,0),
 			Vector(1,0),
+			Vector(0,1),},
+			{Vector(0,1),
+			Vector(0,0),
+			Vector(1,0),
+			Vector(0,-1),},
+			{Vector(-1,0),
+			Vector(0,0),
+			Vector(1,0),
+			Vector(0,-1),},
+			{Vector(-1,0),
+			Vector(0,0),
 			Vector(0,1),
+			Vector(0,-1),},
 		},
 		blockSprite = Sprites.greenBlock
 	}

@@ -24,9 +24,6 @@ function Grid:initGrid()
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
 
-	self.input:bind('.', 'counterClockwise')
-	self.input:bind('/', 'clockwise')
-
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
 		for col=1, Constants.gridWidth do
@@ -36,10 +33,10 @@ function Grid:initGrid()
 
 	--for testing
 	for col=2, Constants.gridWidth do
-		self.grid[24][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
+		self.grid[25][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
 	end
 	for col=3, 20 do
-		self.grid[23][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
+		self.grid[24][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
 	end
 
 	self:newPlayerBlock() -- for testing
@@ -61,10 +58,12 @@ function Grid:update(dt)
 		end
 		self:placePlayerBlock()
 	end
+	
+	if PlayerInputManager.input:down('counter',.25) then self:rotate(-1) end
+	if PlayerInputManager.input:down('clockwise',.25) then self:rotate(1) end
+
 	self:checkForCompletedLines()
 
-	if self.input:pressed('counterClockwise') then self:rotate(-1) end
-	if self.input:pressed('clockwise') then self:rotate(1) end
 
 	self.currentTime = love.timer.getTime()
 	if self.currentTime - self.startTime >= self.timerThreshold then
@@ -79,7 +78,7 @@ function Grid:tick()
 	end
 	--print(self.playerBlock.origin.y)
 	if didMove == false then
-		if self.playerBlock.origin.y == 1 then
+		if self.playerBlock.origin.y == 2 then
 			Gamestate.switch(menu)
 		end
 		self:placePlayerBlock()
@@ -115,7 +114,7 @@ function Grid:draw()
 end
 
 function Grid:DrawShape(blockType,origin) 
-	for k,v in pairs(blockType.blocks) do
+	for k,v in pairs(blockType.blocks[blockType.drawRotation]) do
 		blockPos = v + origin
 		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth,blockPos.y * Constants.tileHeight)
 	end
@@ -123,10 +122,9 @@ function Grid:DrawShape(blockType,origin)
 end
 
 function Grid:newPlayerBlock() 
-
 	blockShape = PlayerBlockManager:popLatestBlock()
-	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,1),blockShape)
-	for k,v in pairs(self.playerBlock.blockType.blocks) do
+	self.playerBlock = PlayerBlock(Vector(Constants.gridWidth/2,2),blockShape)
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
 		blockPos = v + self.playerBlock.origin
 		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
 	end
@@ -181,33 +179,36 @@ function Grid:movePlayerBlockXAxis(movementAxis)
 		blockPos = self.playerBlock.origin + v
 		self.grid[blockPos.y][blockPos.x].newlyPlaced = false
 	end
+
+	return true
 end
 
 function Grid:rotate(rotationDirection)
 	index = self.playerBlock.blockType.currentRotation + rotationDirection
-	if index == 0 then index = 4 
-	else if index == 5 then index = 1 end end
+	if index == 0 then index = #self.playerBlock.blockType.blocks 
+	else if index == #self.playerBlock.blockType.blocks + 1 then index = 1 end end
 	origin = self.playerBlock.origin
-	print(index)
 	
 	--are any places occupied? if so, rotate cannot happen
 	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
 		blockPos = origin + v
 		if self.grid[blockPos.y][blockPos.x] == nil then 
 			if blockPos.x < 1 then 
-				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
-					self.playerBlock.origin.x = self.playerBlock.origin.x+1 
+				didMove = self:movePlayerBlockXAxis(Vector(1,0))
+				if didMove == true then
+					self:rotate(rotationDirection)
 				end
+				return
 			else 
-				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
-					self.playerBlock.origin.x = self.playerBlock.origin.x-1 
-				end 
+				didMove = self:movePlayerBlockXAxis(Vector(-1,0))
+				if didMove == true then
+					self:rotate(rotationDirection)
+				end
+				return
 			end
-			print('there is a wall') 
 			blockPos = origin+v
 		end
 		if self.grid[blockPos.y][blockPos.x].occupied and self.grid[blockPos.y][blockPos.x].isPlayerBlock == false then 
-			print('occupied ... cannot rotate') 
 			return
 		end
 	end

@@ -3,8 +3,8 @@ local constants = {
     tileWidth = 8,
     tileHeight = 8,
 
-    gridHeightBuffer = 4,
-    gridHeight = 20 + 4,
+    gridHeightBuffer = 5,
+    gridHeight = 20 + 5,
     gridWidth = 10,
 
     windowHeightBuffer = 2,
