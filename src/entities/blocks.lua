@@ -11,20 +11,20 @@ local Blocks = {
 				Vector(0, 2),
 				Vector(1, 2)},
 			{
-				Vector(2,1),
 				Vector(1,1),
 				Vector(0,1),
-				Vector(0,2)},
+				Vector(-1,1),
+				Vector(-1,2)},
 			{
-				Vector(1,2),
-				Vector(1,1),
-				Vector(1,0),
-				Vector(0,0)},
+				Vector(0,2),
+				Vector(0,1),
+				Vector(0,0),
+				Vector(-1,0)},
 			{
+				Vector(-1,1),
 				Vector(0,1),
 				Vector(1,1),
-				Vector(2,1),
-				Vector(2,0)},
+				Vector(1,0)},
 		},
 		blockSprite = Sprites.blueBlock
 	},
@@ -32,28 +32,28 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
-				Vector(1,0),
-				Vector(1,1),
+				Vector(0,0),
+				Vector(0,1),
+				Vector(0,2),
+				Vector(-1,2),
+			},
+			{
 				Vector(1,2),
 				Vector(0,2),
+				Vector(-1,2),
+				Vector(-1,1)
 			},
 			{
-				Vector(2,2),
-				Vector(1,2),
 				Vector(0,2),
-				Vector(0,1)
+				Vector(0,1),
+				Vector(0,0),
+				Vector(1,0)
 			},
 			{
-				Vector(1,2),
-				Vector(1,1),
-				Vector(1,0),
-				Vector(2,0)
-			},
-			{
+				Vector(-1,1),
 				Vector(0,1),
 				Vector(1,1),
-				Vector(2,1),
-				Vector(2,2)
+				Vector(1,2)
 			},
 		},
 		blockSprite = Sprites.brownBlock
@@ -62,28 +62,28 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
-				Vector(1,0),
-				Vector(1,1),
-				Vector(1,2),
-				Vector(1,3),
+				Vector(0,0),
+				Vector(0,1),
+				Vector(0,2),
+				Vector(0,3),
 			},
 			{
+				Vector(-1,3),
 				Vector(0,3),
 				Vector(1,3),
 				Vector(2,3),
-				Vector(3,3),
 			},
 			{
-				Vector(1,0),
-				Vector(1,1),
-				Vector(1,2),
-				Vector(1,3),
+				Vector(0,0),
+				Vector(0,1),
+				Vector(0,2),
+				Vector(0,3),
 			},
 			{
+				Vector(-1,3),
 				Vector(0,3),
 				Vector(1,3),
 				Vector(2,3),
-				Vector(3,3),
 			},
 		},
 		blockSprite = Sprites.lightBlueBlock
@@ -92,28 +92,28 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
-				Vector(0,0),
-				Vector(1,1),
+				Vector(-1,0),
 				Vector(0,1),
-				Vector(1,0),
+				Vector(-1,1),
+				Vector(0,0),
 			},
 			{
-				Vector(0,0),
-				Vector(1,1),
+				Vector(-1,0),
 				Vector(0,1),
-				Vector(1,0),
+				Vector(-1,1),
+				Vector(0,0),
 			},
 			{
-				Vector(0,0),
-				Vector(1,1),
+				Vector(-1,0),
 				Vector(0,1),
-				Vector(1,0),
+				Vector(-1,1),
+				Vector(0,0),
 			},
 			{
-				Vector(0,0),
-				Vector(1,1),
+				Vector(-1,0),
 				Vector(0,1),
-				Vector(1,0),
+				Vector(-1,1),
+				Vector(0,0),
 
 			}
 
@@ -124,28 +124,28 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
+				Vector(-1,2),
 				Vector(0,2),
-				Vector(1,2),
-				Vector(1,1),
-				Vector(2,1),
-			},
-			{
-				Vector(1,2),
-				Vector(1,1),
 				Vector(0,1),
-				Vector(0,0),
+				Vector(1,1),
 			},
 			{
 				Vector(0,2),
-				Vector(1,2),
-				Vector(1,1),
-				Vector(2,1),
+				Vector(0,1),
+				Vector(-1,1),
+				Vector(-1,0),
 			},
 			{
-				Vector(1,2),
-				Vector(1,1),
+				Vector(-1,2),
+				Vector(0,2),
 				Vector(0,1),
-				Vector(0,0),
+				Vector(1,1),
+			},
+			{
+				Vector(0,2),
+				Vector(0,1),
+				Vector(-1,1),
+				Vector(-1,0),
 			},
 		},
 		blockSprite = Sprites.redBlock
@@ -154,28 +154,28 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
-				Vector(0,1),
-				Vector(1,1),
-				Vector(1,2),
-				Vector(2,2),
-			},
-			{
-				Vector(1,0),
-				Vector(1,1),
+				Vector(-1,1),
 				Vector(0,1),
 				Vector(0,2),
-			},
-			{
-				Vector(0,1),
-				Vector(1,1),
 				Vector(1,2),
-				Vector(2,2),
 			},
 			{
-				Vector(1,0),
-				Vector(1,1),
+				Vector(0,0),
+				Vector(0,1),
+				Vector(-1,1),
+				Vector(-1,2),
+			},
+			{
+				Vector(-1,1),
 				Vector(0,1),
 				Vector(0,2),
+				Vector(1,2),
+			},
+			{
+				Vector(0,0),
+				Vector(0,1),
+				Vector(-1,1),
+				Vector(-1,2),
 			},
 		},
 		blockSprite = Sprites.oliveBlock

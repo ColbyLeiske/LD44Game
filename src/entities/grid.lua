@@ -148,8 +148,8 @@ function Grid:movePlayerBlockXAxis(movementAxis)
 	end
 end
 
-function Grid:rotate(int)
-	index = self.playerBlock.blockType.currentRotation + int
+function Grid:rotate(rotationDirection)
+	index = self.playerBlock.blockType.currentRotation + rotationDirection
 	if index == 0 then index = 4 
 	else if index == 5 then index = 1 end end
 	origin = self.playerBlock.origin
@@ -158,6 +158,19 @@ function Grid:rotate(int)
 	--are any places occupied? if so, rotate cannot happen
 	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
 		blockPos = origin + v
+		if self.grid[blockPos.y][blockPos.x] == nil then 
+			if blockPos.x < 1 then 
+				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+					self.playerBlock.origin.x = self.playerBlock.origin.x+1 
+				end
+			else 
+				for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+					self.playerBlock.origin.x = self.playerBlock.origin.x-1 
+				end 
+			end
+			print('there is a wall') 
+			blockPos = origin+v
+		end
 		if self.grid[blockPos.y][blockPos.x].occupied and self.grid[blockPos.y][blockPos.x].isPlayerBlock == false then 
 			print('occupied ... cannot rotate') 
 			return
