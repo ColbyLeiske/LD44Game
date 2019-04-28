@@ -55,6 +55,7 @@ function Grid:update(dt)
 	end
 
 	if self.input:pressed('counterClockwise') then self:rotate(-1) end
+	if self.input:pressed('clockwise') then self:rotate(1) end
 
 	self.currentTime = love.timer.getTime()
 	if self.currentTime - self.startTime >= self.timerThreshold then
@@ -65,7 +66,8 @@ end
 
 function Grid:rotate(int)
 	index = self.playerBlock.blockType.currentRotation + int
-	if index == 0 then index = 4 end
+	if index == 0 then index = 4 
+	else if index == 5 then index = 1 end end
 	origin = self.playerBlock.origin
 	print(index)
 	
@@ -84,6 +86,7 @@ function Grid:rotate(int)
 		self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
 	end
 
+	--Rotate block
 	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
 		blockPos = origin + v
 		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
