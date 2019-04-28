@@ -9,7 +9,8 @@ local Blocks = {
 			Vector(0, 2),
 			Vector(1, 2),
 		},
-		blockSprite = Sprites.blueBlock
+		blockSprite = Sprites.blueBlock,
+		blockHeight = 3
 	},
 	LRight = {
 		blocks = {
@@ -18,7 +19,8 @@ local Blocks = {
 			Vector(1,2),
 			Vector(0,2),
 		},
-		blockSprite = Sprites.brownBlock
+		blockSprite = Sprites.brownBlock,
+		blockHeight = 3
 	},
 	Straight = {
 		blocks = {
@@ -27,7 +29,8 @@ local Blocks = {
 			Vector(0,2),
 			Vector(0,3),
 		},
-		blockSprite = Sprites.lightBlueBlock
+		blockSprite = Sprites.lightBlueBlock,
+		blockHeight = 4
 	},
 	Square = {
 		blocks = {
@@ -36,7 +39,8 @@ local Blocks = {
 			Vector(0,1),
 			Vector(1,0),
 		},
-		blockSprite = Sprites.tanBlock
+		blockSprite = Sprites.tanBlock,
+		blockHeight = 2
 	},
 	SLeft = {
 		blocks = {
@@ -45,7 +49,8 @@ local Blocks = {
 			Vector(1,0),
 			Vector(2,0),
 		},
-		blockSprite = Sprites.redBlock
+		blockSprite = Sprites.redBlock,
+		blockHeight = 2
 	},
 	SRight = {
 		blocks = {
@@ -54,7 +59,8 @@ local Blocks = {
 			Vector(1,1),
 			Vector(2,1),
 		},
-		blockSprite = Sprites.oliveBlock
+		blockSprite = Sprites.oliveBlock,
+		blockHeight = 2
 	},--Z lol
 	TShape = {
 		blocks = {
@@ -63,7 +69,8 @@ local Blocks = {
 			Vector(1,0),
 			Vector(0,1),
 		},
-		blockSprite = Sprites.greenBlock
+		blockSprite = Sprites.greenBlock,
+		blockHeight = 2
 	}
 }
 return Blocks
