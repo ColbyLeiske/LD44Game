@@ -1,5 +1,6 @@
 lume = require 'lib.lume.lume'
 Blocks = require 'src.entities.blocks'
+Input = require 'lib.boipushy.input'
 
 local playerblockmanager = {blockQueue = {}}
 

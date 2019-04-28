@@ -1,11 +1,13 @@
 Blocks = require 'src.entities.blocks'
 PlayerBlock = require 'src.entities.playerblock'
 PlayerBlockManager = require 'src.entities.playerblockmanager'
+PlayerInputManager = require 'src.entities.playerinputmanager'
 Input = require 'lib.boipushy.input'
 lume = require 'lib.lume.lume'
 sprites = require 'src.util.spriteloader'
 Vector = require 'lib.hump.vector'
 ScoreManager = require 'src.entities.scoremanager'
+Keybinds = require 'src.states.keybinds'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -19,12 +21,6 @@ local Grid = {
 }
 
 function Grid:initGrid()
-	self.input = Input()
-	self.input:bind('a','left')
-	self.input:bind('d','right')
-	self.input:bind('s','soft')
-	self.input:bind('w','hard')
-
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
 
@@ -47,14 +43,16 @@ function Grid:initGrid()
 	font = love.graphics.newFont(10)
 	font:setFilter('nearest','nearest',1)
 	love.graphics.setFont(font)
+	
+	menu = require 'src.states.menu'
 end
 
 function Grid:update(dt)
 
-	if self.input:down('soft', 0.12) then self:movePlayerBlockDown() end
-	if self.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
-	if self.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
-	if self.input:pressed('hard') then 
+	if PlayerInputManager.input:down('soft', 0.12) then self:movePlayerBlockDown() end
+	if PlayerInputManager.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
+	if PlayerInputManager.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
+	if PlayerInputManager.input:pressed('hard') then 
 		for i=1,Constants.gridHeight do
 			self:movePlayerBlockDown()
 		end
@@ -73,8 +71,14 @@ function Grid:tick()
 	if self.playerBlock then 
 		didMove = self:movePlayerBlockDown() 
 	end
+	--print(self.playerBlock.origin.y)
 	if didMove == false then
+		if self.playerBlock.origin.y == 1 then
+			Gamestate.switch(menu)
+		end
 		self:placePlayerBlock()
+		
+		
 	end
 
 	--self:fixStraglers()
@@ -201,7 +205,7 @@ function Grid:checkForCompletedLines()
 				newLine[col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
 			end
 			table.remove(self.grid,v)
-			table.insert( self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
+			table.insert(self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
 			ScoreManager:clearedLine()
 		end
 	end

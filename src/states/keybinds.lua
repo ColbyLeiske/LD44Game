@@ -1,9 +1,9 @@
+PlayerInputManager = require 'src.entities.playerinputmanager'
+
 local menu
 local keybinds = {}
-local buttons = {}
 
 local font = love.graphics.newFont(32)
-
 
 local window_width = love.graphics.getWidth()
 local window_height = love.graphics.getHeight()
@@ -15,59 +15,39 @@ local buttonStartX = (window_width * 0.5) - (button_width * 0.5)
 local buttonMargin = 25
 local bindNextKeyPress = {check=false, inputAction=''}
 
-local keyActionAssociations = {
-  ['left'] = 'a',
-  ['right'] = 'd',
-  ['soft'] = 's',
-  ['hard'] = 'w',
-  ['clockwise'] = 'c',
-  ['counter'] = 'v',
-  ['back'] = 'back'
-}
-
 function keybinds:init()
   menu = require 'src.states.menu'
-    self.input = Input()
-    self.input:bind('mouse1', 'left_click')
-
-  for k,v in pairs(keyActionAssociations) do
-    self.input:bind(v,k)
-  end
-end
-
-function keybinds:enter()
-  love.keyboard.setKeyRepeat(true)
-  buttons[1] = newButton("Back" , function() Gamestate.switch(menu) end,'back')
-
-  buttons[2] = newButton("Drag left", function() self:setupNewKeybind(keyActionAssociations['left'],'left') end, 'left')
-  buttons[3] = newButton("Drag right", function() self:setupNewKeybind(keyActionAssociations['right'],'right') end,'right')
-  buttons[4] = newButton("Soft drop", function()self:setupNewKeybind(keyActionAssociations['soft'],'soft') end,'soft')
-  buttons[5] = newButton("Hard drop", function() self:setupNewKeybind(keyActionAssociations['hard'],'hard') end,'hard')
-  buttons[6] = newButton("Rotate clockwise", function() self:setupNewKeybind(keyActionAssociations['clockwise'],'clockwise') end, 'clockwise')
-  buttons[7] = newButton("Rotate counterclockwise", function() self:setupNewKeybind(keyActionAssociations['counter'],'counter') end,'counter')
+  self.buttons = {}
+  self.buttons[1] = self:newButton("Back" , function() Gamestate.switch(menu) end,'back')
+  self.buttons[2] = self:newButton("Drag left", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['left'],'left') end, 'left')
+  self.buttons[3] = self:newButton("Drag right", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['right'],'right') end,'right')
+  self.buttons[4] = self:newButton("Soft drop", function()self:setupNewKeybind(PlayerInputManager.keyActionAssociations['soft'],'soft') end,'soft')
+  self.buttons[5] = self:newButton("Hard drop", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['hard'],'hard') end,'hard')
+  self.buttons[6] = self:newButton("Rotate clockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['clockwise'],'clockwise') end, 'clockwise')
+  self.buttons[7] = self:newButton("Rotate counterclockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['counter'],'counter') end,'counter')
+  print(#self.buttons)
 end
 
 function keybinds:setupNewKeybind(prevKey,inputAction)
-  self.input:unbind(prevKey)
+  PlayerInputManager.input:unbind(prevKey)
   bindNextKeyPress = {check = true, inputAction = inputAction }
-  print('Preparing for new keybind with PREV: '.. prevKey .. ' with ACTION: '.. inputAction)
 end
 
 function keybinds:update()
-  for k, button in ipairs(buttons) do
+  for k, button in ipairs(self.buttons) do
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     local mousex, mousey = love.mouse.getPosition()
     button.active = mousex > buttonStartX and mousex < buttonStartX + button_width and mousey > buttony and mousey < buttony + button_height
-    if self.input:pressed('left_click') and button.active then
+    if PlayerInputManager.input:pressed('left_click') and button.active then
       button.fn()
     end
   end
 end
 
 function keybinds:draw()
+  for k, button in ipairs(self.buttons) do
 
-  for k, button in ipairs(buttons) do
-    local printValue = (keyActionAssociations[button.inputAction])
+    local printValue = (PlayerInputManager.keyActionAssociations[button.inputAction])
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     --color that displays when the cursor is over the button
     if button.active then
@@ -90,14 +70,13 @@ end
 
 function keybinds:keyreleased(key)
   if bindNextKeyPress.check then
-    self.input:bind(key, bindNextKeyPress.inputAction)
-    keyActionAssociations[bindNextKeyPress.inputAction] = key
+    PlayerInputManager.input:bind(key, bindNextKeyPress.inputAction)
+    PlayerInputManager.keyActionAssociations[bindNextKeyPress.inputAction] = key
     bindNextKeyPress.check = false
   end
 end
 
-
-function newButton(text, fn, inputAction)
+function keybinds:newButton(text, fn, inputAction)
     return {
       text = text,
       fn = fn,
