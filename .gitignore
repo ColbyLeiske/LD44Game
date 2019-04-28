@@ -2,3 +2,4 @@ libs/*
 libs
 temp/*
 temp
+src/util/secrets.lua

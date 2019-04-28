@@ -12,6 +12,7 @@ function love.conf(t)
 
     t.window.title = "Untitled"         -- The window title (string)
     t.window.icon = nil                 -- Filepath to an image to use as the window's icon (string)
+
     t.window.width = Constants.tileWidth * Constants.windowScaleFactor * Constants.gridWidth                -- The window width (number)
     t.window.height = Constants.tileHeight * Constants.windowScaleFactor * (Constants.gridHeight - Constants.gridHeightBuffer)            -- The window height (number)
     t.window.borderless = false         -- Remove all border visuals from the window (boolean)
