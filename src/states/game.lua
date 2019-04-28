@@ -1,26 +1,34 @@
 GameObject = require 'src.entities.gameobject'
-Player = require 'src.entities.player'
+Constants = require('src.util.gameconstants')
 Vector = require 'lib.hump.vector'
-RoomManager = require 'src.rooms.roommanager'
+entityManager = require 'src.entities.entitymanager'
+Grid = require 'src.entities.grid'
 
 local game = {}
-
-local rM = RoomManager(4,4)
 
 function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
 
-   	local player = Player(Vector(200,200))
-    rM:addEntity(player)
+    Grid:initGrid()
+    --local grid = Grid()
+    --self.eM:addEntity(grid)
+
+    --position = Vector(0, 0)
+    --local block = LBlockRight(position, grid)
+    --self.eM = entityManager()
+    --self.eM:addEntity(block)
+
 end
 
 function game:update(dt)
-   rM:update(dt)
+	--self.eM:update(dt)
+	Grid:update(dt)
 end
 
 function game:draw()
-    rM:draw()
+	--self.eM:draw()
+	Grid:draw()
 end
 
 function game:keypressed(key) 
@@ -28,12 +36,6 @@ function game:keypressed(key)
     love.event.quit()
    end
 
-   if key == 'down' then
-    rM:changeRoom(0,1)
-   end
-   if key == 'up' then
-    rM:changeRoom(0,1)
-   end
 end
 
 return game
