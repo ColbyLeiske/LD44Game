@@ -64,37 +64,6 @@ function Grid:update(dt)
 	end
 end
 
-function Grid:rotate(int)
-	index = self.playerBlock.blockType.currentRotation + int
-	if index == 0 then index = 4 
-	else if index == 5 then index = 1 end end
-	origin = self.playerBlock.origin
-	print(index)
-	
-	--are any places occupied? if so, rotate cannot happen
-	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
-		blockPos = origin + v
-		if self.grid[blockPos.y][blockPos.x].occupied and self.grid[blockPos.y][blockPos.x].isPlayerBlock == false then 
-			print('occupied ... cannot rotate') 
-			return
-		end
-	end
-
-	--Delete old blocks
-	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
-		blockPos = origin + v
-		self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
-	end
-
-	--Rotate block
-	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
-		blockPos = origin + v
-		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
-	end
-
-	self.playerBlock.blockType.currentRotation = index
-end
-
 function Grid:tick()
 	self:checkForCompletedLines()
 
@@ -110,14 +79,6 @@ end
 
 function Grid:draw()
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
-
-	-- for col=1, Constants.gridWidth do
-	-- 	love.graphics.line(Constants.tileWidth*col, 0, Constants.tileWidth*col, love.graphics.getHeight())
-	-- end
-
-	-- for row=1, Constants.gridHeight do
-	-- 	love.graphics.line(0, Constants.tileHeight*row, love.graphics.getWidth(), Constants.tileHeight*row)
-	-- end
 
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
@@ -185,6 +146,37 @@ function Grid:movePlayerBlockXAxis(movementAxis)
 		blockPos = self.playerBlock.origin + v
 		self.grid[blockPos.y][blockPos.x].newlyPlaced = false
 	end
+end
+
+function Grid:rotate(int)
+	index = self.playerBlock.blockType.currentRotation + int
+	if index == 0 then index = 4 
+	else if index == 5 then index = 1 end end
+	origin = self.playerBlock.origin
+	print(index)
+	
+	--are any places occupied? if so, rotate cannot happen
+	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+		blockPos = origin + v
+		if self.grid[blockPos.y][blockPos.x].occupied and self.grid[blockPos.y][blockPos.x].isPlayerBlock == false then 
+			print('occupied ... cannot rotate') 
+			return
+		end
+	end
+
+	--Delete old blocks
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
+		blockPos = origin + v
+		self.grid[blockPos.y][blockPos.x] = {occupied=false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
+	end
+
+	--Rotate block
+	for k,v in pairs(self.playerBlock.blockType.blocks[index]) do
+		blockPos = origin + v
+		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
+	end
+
+	self.playerBlock.blockType.currentRotation = index
 end
 
 function Grid:placePlayerBlock()

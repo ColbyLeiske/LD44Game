@@ -6,10 +6,10 @@ local Blocks = {
 		currentRotation = 1,
 		blocks = {
 			{
-				Vector(1, 0),
-				Vector(1, 1),
-				Vector(1, 2),
-				Vector(2, 2)},
+				Vector(0, 0),
+				Vector(0, 1),
+				Vector(0, 2),
+				Vector(1, 2)},
 			{
 				Vector(2,1),
 				Vector(1,1),
@@ -29,6 +29,7 @@ local Blocks = {
 		blockSprite = Sprites.blueBlock
 	},
 	LRight = {
+		currentRotation = 1,
 		blocks = {
 			{
 				Vector(1,0),
@@ -58,6 +59,7 @@ local Blocks = {
 		blockSprite = Sprites.brownBlock
 	},
 	Straight = {
+		currentRotation = 1,
 		blocks = {
 			{
 				Vector(1,0),
@@ -119,6 +121,7 @@ local Blocks = {
 		blockSprite = Sprites.tanBlock
 	},
 	SLeft = {
+		currentRotation = 1,
 		blocks = {
 			{
 				Vector(0,2),
@@ -148,6 +151,7 @@ local Blocks = {
 		blockSprite = Sprites.redBlock
 	},
 	SRight = {
+		currentRotation = 1,
 		blocks = {
 			{
 				Vector(0,1),
