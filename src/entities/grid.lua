@@ -70,6 +70,17 @@ function Grid:update(dt)
 		self:tick()
 		self.startTime = self.currentTime
 	end
+
+	if PlayerInputManager.input:pressed('buyLLeft') then 
+		PlayerBlockManager:purchaseBlock(Blocks.TShape) 
+		print('hi')
+	elseif PlayerInputManager.input:pressed('buyLRight') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
+	elseif PlayerInputManager.input:pressed('buyStraight') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
+	elseif PlayerInputManager.input:pressed('buySquare') then PlayerBlockManager:purchaseBlock(Blocks.LLeft)
+	elseif PlayerInputManager.input:pressed('buySLeft') then PlayerBlockManager:purchaseBlock(Blocks.LRight)
+	elseif PlayerInputManager.input:pressed('buySRight') then PlayerBlockManager:purchaseBlock(Blocks.Square)
+	elseif PlayerInputManager.input:pressed('buyTShape') then PlayerBlockManager:purchaseBlock(Blocks.SRight)
+	end
 end
 
 function Grid:tick()
@@ -111,12 +122,25 @@ function Grid:draw()
 	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
 		self:DrawShape(PlayerBlockManager.blockQueue[i],Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
 	end
+
+	i = 12
+	scale = 0.5
+	for k,v in pairs(Blocks) do
+		if k == 'None' then 
+		else 
+			self:DrawShape(v, Vector(5,i), scale, scale) 
+			i = i + (v.blockHeight) + 1
+		end
+	end
 end
 
-function Grid:DrawShape(blockType,origin) 
+function Grid:DrawShape(blockType,origin,sx,sy) 
+	sx = sx or 1
+	sy = sy or 1
+
 	for k,v in pairs(blockType.blocks[blockType.drawRotation]) do
 		blockPos = v + origin
-		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth,blockPos.y * Constants.tileHeight)
+		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth*sx ,blockPos.y * Constants.tileHeight*sy, 0, sx, sy)
 	end
 
 end

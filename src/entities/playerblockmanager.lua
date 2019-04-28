@@ -30,8 +30,8 @@ function playerblockmanager:generateNewBlock()
     end
 end
 
-function playerblockmanager:purchaseBlock()
-
+function playerblockmanager:purchaseBlock(blockType)
+    self.blockQueue[#self.blockQueue] = blockType
 end
 
 return playerblockmanager

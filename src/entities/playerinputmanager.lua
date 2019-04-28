@@ -8,7 +8,14 @@ local PlayerInputManager = {
         ['hard'] = 'w',
         ['clockwise'] = 'c',
         ['counter'] = 'v',
-        ['back'] = 'back'
+        ['back'] = 'back',
+        ['buyLLeft'] = '1',
+        ['buyLRight'] = '2',
+        ['buyStraight'] = '3',
+        ['buySquare'] = '4',
+        ['buySLeft'] = '5',
+        ['buySRight'] = '6',
+        ['buyTShape'] = '7',
       },
 }
 

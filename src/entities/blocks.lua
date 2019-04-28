@@ -27,7 +27,8 @@ local Blocks = {
 				Vector(1,0),
 				Vector(-1,1)},
 		},
-		blockSprite = Sprites.blueBlock
+		blockSprite = Sprites.blueBlock,
+		blockHeight = 3
 	},
 	LRight = {
 		currentRotation = 1,
@@ -59,7 +60,8 @@ local Blocks = {
 				Vector(1,1)
 			},
 		},
-		blockSprite = Sprites.brownBlock
+		blockSprite = Sprites.brownBlock,
+		blockHeight = 3
 	},
 	Straight = {
 		currentRotation = 1,
@@ -79,7 +81,8 @@ local Blocks = {
 				Vector(1,0),
 			},
 		},
-		blockSprite = Sprites.lightBlueBlock
+		blockSprite = Sprites.lightBlueBlock,
+		blockHeight = 4
 	},
 	Square = {
 		currentRotation = 1,
@@ -93,7 +96,8 @@ local Blocks = {
 				Vector(0,0),
 			},
 		},
-		blockSprite = Sprites.tanBlock
+		blockSprite = Sprites.tanBlock,
+		blockHeight = 2
 	},
 	SLeft = {
 		currentRotation = 1,
@@ -125,7 +129,8 @@ local Blocks = {
 				Vector(-1,0),
 			},
 		},
-		blockSprite = Sprites.redBlock
+		blockSprite = Sprites.redBlock,
+		blockHeight = 2
 	},
 	SRight = {
 		currentRotation = 1,
@@ -157,7 +162,8 @@ local Blocks = {
 				Vector(-1,2),
 			},
 		},
-		blockSprite = Sprites.oliveBlock
+		blockSprite = Sprites.oliveBlock,
+		blockHeight = 2
 	},--Z lol
 	TShape = {
 		currentRotation = 1,
@@ -181,7 +187,8 @@ local Blocks = {
 			Vector(0,1),
 			Vector(0,-1),},
 		},
-		blockSprite = Sprites.greenBlock
+		blockSprite = Sprites.greenBlock,
+		blockHeight = 2
 	}
 }
 return Blocks
