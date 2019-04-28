@@ -1,22 +1,21 @@
-entityManager = require 'src.entities.entitymanager'
-GameObject = require 'src.entities.gameobject'
+Constants = require('src.util.gameconstants')
+Vector = require 'lib.hump.vector'
+Grid = require 'src.entities.grid'
 
 local game = {}
 
 function game:enter()
     logger:log("Starting Game Intialization")
     logger:log("Game Initialized")
-
-    local testGameObject = GameObject(50,50,{})
-    entityManager:addEntity(testGameObject)
+    Grid:initGrid()
 end
 
 function game:update(dt)
-   entityManager:update(dt)
+	Grid:update(dt)
 end
 
 function game:draw()
-    entityManager:draw()
+	Grid:draw()
 end
 
 function game:keypressed(key) 

@@ -4,11 +4,11 @@ Lume = require ('lib.lume.lume')
 
 local GameObject = Object:extend()
 
-function GameObject:new(x, y, opts)
+function GameObject:new(position, opts)
     local opts = opts or {}
     if opts then for k, v in pairs(opts) do self[k] = v end end
 
-    self.x, self.y = x, y
+    self.position = position
     --self.id = Lume.UUID()
     self.dead = false
     self.timer = Timer()
@@ -19,7 +19,6 @@ function GameObject:update(dt)
 end
 
 function GameObject:draw()
-    love.graphics.rectangle("fill",self.x,self.y,50,50)
 end
 
 return GameObject
