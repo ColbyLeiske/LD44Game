@@ -178,7 +178,7 @@ function Grid:checkForCompletedLines()
 			end
 			table.remove(self.grid,v)
 			table.insert( self.grid,5,newLine )
-			for i=1,4 do	
+			for i=1,5 do	
 				for col=1, Constants.gridWidth do
 					self.grid[i][col] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
 				end

@@ -5,9 +5,8 @@ function love.load()
     logger:log("Starting up", logger.MISC)
     leaderboard = require "src.states.leaderboard"
     game = require "src.states.game"
-    --leaderboard = require "src.states.leaderboard"
 
     Gamestate.registerEvents()
-    Gamestate.switch(leaderboard)
+    Gamestate.switch(game)
 end
 
