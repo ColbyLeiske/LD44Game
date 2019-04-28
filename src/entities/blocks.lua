@@ -3,11 +3,24 @@ Sprites = require 'src.util.spriteloader'
 local Blocks = {
 	None = {},
 	LLeft = {
+		currentRotation = 1,
 		blocks = {
-			Vector(0, 0),
-			Vector(0, 1),
-			Vector(0, 2),
+			{Vector(1, 0),
+			Vector(1, 1),
 			Vector(1, 2),
+			Vector(2, 2)},
+			{Vector(2,1),
+			Vector(1,1),
+			Vector(0,1),
+			Vector(0,2)},
+			{Vector(1,2),
+			Vector(1,1),
+			Vector(1,0),
+			Vector(0,0)},
+			{Vector(0,1),
+			Vector(1,1),
+			Vector(2,1),
+			Vector(2,0)},
 		},
 		blockSprite = Sprites.blueBlock
 	},
@@ -30,11 +43,12 @@ local Blocks = {
 		blockSprite = Sprites.lightBlueBlock
 	},
 	Square = {
+		currentRotation = 1,
 		blocks = {
-			Vector(0,0),
+			{Vector(0,0),
 			Vector(1,1),
 			Vector(0,1),
-			Vector(1,0),
+			Vector(1,0),},
 		},
 		blockSprite = Sprites.tanBlock
 	},
