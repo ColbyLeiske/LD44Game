@@ -37,6 +37,7 @@ function Grid:initGrid()
 	love.graphics.setFont(font)
 	
 	menu = require 'src.states.menu'
+	gameover = require 'src.states.gameover'
 end
 
 function Grid:resume()
@@ -69,9 +70,7 @@ function Grid:update(dt)
 		self.startTime = self.currentTime
 	end
 
-	if PlayerInputManager.input:pressed('buyLLeft') then 
-		PlayerBlockManager:purchaseBlock(Blocks.TShape) 
-		print('hi')
+	if PlayerInputManager.input:pressed('buyLLeft') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 
 	elseif PlayerInputManager.input:pressed('buyLRight') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
 	elseif PlayerInputManager.input:pressed('buyStraight') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
 	elseif PlayerInputManager.input:pressed('buySquare') then PlayerBlockManager:purchaseBlock(Blocks.LLeft)
@@ -88,7 +87,7 @@ function Grid:tick()
 	--print(self.playerBlock.origin.y)
 	if didMove == false then
 		if self.playerBlock.origin.y == 2 then
-			Gamestate.switch(menu)
+			Gamestate.push(gameover)
 		end
 		self:placePlayerBlock()	
 	end

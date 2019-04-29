@@ -17,7 +17,10 @@ function spriteloader:loadSprites()
     self.leaderboard = love.graphics.newImage("res/raw_sprites/png/leaderboard.png")
     self.gamebackground = love.graphics.newImage('res/raw_sprites/png/gamebackground.png')
     self.pausemenu = love.graphics.newImage('res/raw_sprites/png/pausemenu.png')
-
+    self.pausebutton = love.graphics.newImage('res/raw_sprites/png/pausebutton.png')
+    self.gameoverbackground = love.graphics.newImage('res/raw_sprites/png/gameoverbackground.png')
+    self.gameoverbutton = love.graphics.newImage('res/raw_sprites/png/gameoverbutton.png')
+    
     self.hasLoaded = true
 end
 
