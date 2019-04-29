@@ -25,10 +25,6 @@ function AudioManager:playtheme()
 	love.audio.play(self.tetristheme)
 end
 
-function AudioManager:playGameover()
-	love.audio.stop()
-end
-
 function AudioManager:mute() 
     love.audio.setVolume(0)
 end

@@ -1,6 +1,7 @@
 
 Colors = require 'src.util.colors'
 PlayerInputManager = require 'src.entities.playerinputmanager'
+AudioManager = require 'src.entities.audiomanager'
 
 local keybinds
 local credits
@@ -25,6 +26,9 @@ function menu:init()
   credits = require 'src.states.credits'
   keybinds = require 'src.states.keybinds'
   game = require 'src.states.game'
+
+  AudioManager:init()
+  AudioManager:playtheme()
   
 end
 
