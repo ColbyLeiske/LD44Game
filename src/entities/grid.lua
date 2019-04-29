@@ -340,9 +340,9 @@ function Grid:checkForCompletedLines()
 		if #rowsToDelete >= 4 then
 			ScoreManager:setMultiplier(1)
 			TimeManager:setMultiplier(1)
-			love.audio.play(SoundEffects.plop)
+			love.audio.play(SoundEffects.chaching)
 		else
-			love.audio.play(SoundEffects.pling)
+			love.audio.play(SoundEffects.coins)
 		end
 	end
 end
