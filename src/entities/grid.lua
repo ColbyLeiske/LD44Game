@@ -49,6 +49,21 @@ function Grid:resume()
 end
 
 function Grid:update(dt)
+	if ScoreManager.score >= 15 and ScoreManager.score < 25 then
+		self.timerThreshold = .3
+	elseif ScoreManager.score >= 25 and ScoreManager.score < 35 then
+		self.timerThreshold = .25
+	elseif ScoreManager.score >= 35 and ScoreManager.score < 45 then
+		self.timerThreshold = .2
+	elseif ScoreManager.score >= 45 and ScoreManager.score < 55 then
+		self.timerThreshold = .18
+	elseif ScoreManager.score >= 55 and ScoreManager.score < 65 then
+		self.timerThreshold = .15
+	elseif ScoreManager.score >= 65 and ScoreManager.score < 100 then
+		self.timerThreshold = .13
+	elseif ScoreManager.score >= 100  then
+		self.timerThreshold = .1
+	end
 
 	if PlayerInputManager.input:down('soft', 0.12) then self:movePlayerBlockDown() end
 	if PlayerInputManager.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
@@ -72,13 +87,13 @@ function Grid:update(dt)
 		self.startTime = self.currentTime
 	end
 
-	if PlayerInputManager.input:pressed('buyLLeft') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 
-	elseif PlayerInputManager.input:pressed('buyLRight') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
-	elseif PlayerInputManager.input:pressed('buyStraight') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
-	elseif PlayerInputManager.input:pressed('buySquare') then PlayerBlockManager:purchaseBlock(Blocks.LLeft)
-	elseif PlayerInputManager.input:pressed('buySLeft') then PlayerBlockManager:purchaseBlock(Blocks.LRight)
-	elseif PlayerInputManager.input:pressed('buySRight') then PlayerBlockManager:purchaseBlock(Blocks.Square)
-	elseif PlayerInputManager.input:pressed('buyTShape') then PlayerBlockManager:purchaseBlock(Blocks.SRight)
+	if PlayerInputManager.input:pressed('buyLLeft') or PlayerInputManager.input:pressed('buyLLeftAlt') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 
+	elseif PlayerInputManager.input:pressed('buyLRight') or PlayerInputManager.input:pressed('buyLRightAlt') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
+	elseif PlayerInputManager.input:pressed('buyStraight') or PlayerInputManager.input:pressed('buyStraightAlt') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
+	elseif PlayerInputManager.input:pressed('buySquare') or PlayerInputManager.input:pressed('buySquareAlt') then PlayerBlockManager:purchaseBlock(Blocks.LLeft)
+	elseif PlayerInputManager.input:pressed('buySLeft') or PlayerInputManager.input:pressed('buySLeftAlt') then PlayerBlockManager:purchaseBlock(Blocks.LRight)
+	elseif PlayerInputManager.input:pressed('buySRight') or PlayerInputManager.input:pressed('buySRightAlt') then PlayerBlockManager:purchaseBlock(Blocks.Square)
+	elseif PlayerInputManager.input:pressed('buyTShape') or PlayerInputManager.input:pressed('buyTShapeAlt') then PlayerBlockManager:purchaseBlock(Blocks.SRight)
 	end
 end
 
@@ -95,10 +110,10 @@ function Grid:tick()
 	end
 
 	TimeManager.time = TimeManager.time - self.timerThreshold
-	if TimeManager.time <= 0 then Gamestate.switch(menu) end
+	if TimeManager.time <= 0 then Gamestate.switch(gameover) end
 end
 
-function Grid:draw()
+function Grid:draw() 
 	minutes = math.floor(TimeManager.time/60)
 	secondsTensPlace = math.floor((TimeManager.time%60)/10)
 	secondsOnesPlace = math.floor((TimeManager.time%60) - (secondsTensPlace*10))
@@ -117,10 +132,10 @@ function Grid:draw()
 	end
 
 	--render queue of blocks
-	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue],Vector(18,1))
+	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue].blockType,Vector(18,1))
 
 	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
-		self:DrawShape(PlayerBlockManager.blockQueue[i],Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
+		self:DrawShape(PlayerBlockManager.blockQueue[i].blockType,Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
 	end
 
 	i = 0
@@ -168,6 +183,9 @@ function Grid:newPlayerBlock()
 		blockPos = v + self.playerBlock.origin
 		self.grid[blockPos.y][blockPos.x] = {occupied = true, BlockType = self.playerBlock.blockType, isPlayerBlock = true, newlyPlaced = false}
 	end
+	self:movePlayerBlockDown()
+	self:movePlayerBlockDown()
+
 end
 
 --refactor to take any axis into account, and go from there for left and right block movement, except if you can't move left we won't place.
@@ -290,6 +308,10 @@ function Grid:checkForCompletedLines()
 	end
 
 	if #rowsToDelete >= 1 then
+		if #rowsToDelete >= 4 then
+			ScoreManager:setMultiplier(1.5)
+			TimeManager:setMultiplier(1.5)
+		end
 		for k,v in pairs(rowsToDelete) do
 			newLine = {}
 			for col=1, Constants.gridWidth do
@@ -299,6 +321,10 @@ function Grid:checkForCompletedLines()
 			table.insert(self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
 			ScoreManager:clearedLine()
 			TimeManager:clearedLine()
+		end
+		if #rowsToDelete >= 4 then
+			ScoreManager:setMultiplier(1)
+			TimeManager:setMultiplier(1)
 		end
 	end
 end

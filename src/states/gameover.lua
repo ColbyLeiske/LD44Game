@@ -9,6 +9,7 @@ menu = require 'src.states.menu'
 keybinding = require 'src.states.keybinds'
 Dreamlo = require 'lib.dreamlo.dreamlo'
 Secrets = require 'src.util.secrets'
+lume = require 'lib.lume.lume'
 
 local gameover = {}
 
@@ -28,7 +29,7 @@ function gameover:update(dt)
     if PlayerInputManager.input:pressed('left_click') then 
         if mousex > 54*4 and mousex < (54+32) * 4 and mousey > 95*4 and mousey < (95+12)*4  and self.hasPressedSubmit == false then
             self.hasPressedSubmit = true
-            if self.name ~= '' or self.name ~= " " then 
+            if self.name ~= '' or self.name ~= " " or ScoreManager.score <= 0 then 
                 Dreamlo.setSecretCode(Secrets.dreamlo_secret)
                 Dreamlo.setPublicCode(Secrets.dreamlo_public)
                 Dreamlo.add(self.name, ScoreManager.score)
@@ -67,16 +68,18 @@ function gameover:draw()
 
 end
 
-function gameover:keypressed(key) 
-    if key == 'rshift' or key == 'lshift' or key == 'capslock' or key == 'lctrl' or key == 'lalt' or key == 'rctrl' or key =='ralt' or key == 'lgui' or key == 'rgui' or key =='return' then
-        return
-    end
+local allowedKeys = {
+    'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','1','2','3','4','5','6','7','8','9','0', 
+}
 
-    if key ~= 'backspace' and string.len( self.name ) < 9 then 
-        self.name = self.name .. key
-    end
+function gameover:keypressed(key) 
     if key == 'backspace' and string.len(self.name) > 0 then
         self.name = self.name:sub(1,-2)
+    end
+
+    legalKey = lume.find(allowedKeys,key)
+    if string.len( self.name ) < 9 and legalKey ~= nil then 
+        self.name = self.name .. key
     end
 end
 

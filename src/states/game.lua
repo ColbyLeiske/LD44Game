@@ -30,10 +30,4 @@ function game:resume()
     Grid:resume()
 end
 
-function game:keypressed(key)
-   if key == 'q' then
-    love.event.quit()
-   end
-end
-
 return game
