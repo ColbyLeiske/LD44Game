@@ -8,6 +8,7 @@ sprites = require 'src.util.spriteloader'
 Vector = require 'lib.hump.vector'
 ScoreManager = require 'src.entities.scoremanager'
 Keybinds = require 'src.states.keybinds'
+TimeManager = require 'src.entities.timemanager'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -23,6 +24,7 @@ local Grid = {
 function Grid:initGrid()
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
+	TimeManager:init()
 
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
@@ -77,9 +79,10 @@ function Grid:tick()
 			Gamestate.switch(menu)
 		end
 		self:placePlayerBlock()
-		
-		
 	end
+
+	TimeManager.time = TimeManager.time - self.timerThreshold
+	if TimeManager.time <= 0 then Gamestate.switch(menu) end
 
 	--self:fixStraglers()
 end
@@ -89,7 +92,10 @@ function Grid:draw()
 	love.graphics.draw(sprites.gamebackground,0,0)
 
 	love.graphics.print(ScoreManager.score,20,5) -- render score
-												 -- render time left
+	minutes = math.floor(TimeManager.time/60)
+	secondsTensPlace = math.floor((TimeManager.time%60)/10)
+	secondsOnesPlace = math.floor((TimeManager.time%60) - (secondsTensPlace*10))
+	love.graphics.print(minutes .. ":" .. secondsTensPlace .. secondsOnesPlace,15,21) -- render time left
 
 	--render game board
 	for j=1 , Constants.gridHeight do
@@ -207,6 +213,7 @@ function Grid:checkForCompletedLines()
 			table.remove(self.grid,v)
 			table.insert(self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
 			ScoreManager:clearedLine()
+			TimeManager:clearedLine()
 		end
 	end
 end
