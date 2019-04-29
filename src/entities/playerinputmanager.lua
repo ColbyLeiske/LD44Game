@@ -16,7 +16,15 @@ local PlayerInputManager = {
         ['buySLeft'] = '5',
         ['buySRight'] = '6',
         ['buyTShape'] = '7',
-      },
+        ['buyLLeftAlt'] = 'kp1',
+        ['buyLRightAlt'] = 'kp2',
+        ['buyStraightAlt'] = 'kp3',
+        ['buySquareAlt'] = 'kp4',
+        ['buySLeftAlt'] = 'kp5',
+        ['buySRightAlt'] = 'kp6',
+        ['buyTShapeAlt'] = 'kp7',
+        ['pause'] = 'escape',
+    },
 }
 
 function PlayerInputManager:init( ) 

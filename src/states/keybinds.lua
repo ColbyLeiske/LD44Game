@@ -18,7 +18,13 @@ local bindNextKeyPress = {check=false, inputAction=''}
 function keybinds:init()
   menu = require 'src.states.menu'
   self.buttons = {}
-  self.buttons[1] = self:newButton("Back" , function() Gamestate.switch(menu) end,'back')
+  self.buttons[1] = self:newButton("Back" , function() 
+    if self.doubleFrom ~= nil then
+      Gamestate.pop()
+    else
+      Gamestate.switch(self.from) 
+    end
+  end,'back')
   self.buttons[3] = self:newButton("Drag left", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['left'],'left') end, 'left')
   self.buttons[5] = self:newButton("Drag right", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['right'],'right') end,'right')
   self.buttons[4] = self:newButton("Soft drop", function()self:setupNewKeybind(PlayerInputManager.keyActionAssociations['soft'],'soft') end,'soft')
@@ -26,6 +32,11 @@ function keybinds:init()
   self.buttons[6] = self:newButton("Rotate clockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['clockwise'],'clockwise') end, 'clockwise')
   self.buttons[7] = self:newButton("Rotate counterclockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['counter'],'counter') end,'counter')
   print(#self.buttons)
+end
+
+function keybinds:enter(from,doubleFrom)
+  self.doubleFrom = doubleFrom or nil
+  self.from = from
 end
 
 function keybinds:setupNewKeybind(prevKey,inputAction)

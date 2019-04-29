@@ -10,8 +10,8 @@ function love.conf(t)
 
     t.audio.mixwithsystem = true        -- Keep background music playing when opening LOVE (boolean, iOS and Android only)
 
-    t.window.title = "Untitled"         -- The window title (string)
-    t.window.icon = nil                 -- Filepath to an image to use as the window's icon (string)
+    t.window.title = "Tetris: Tempo"         -- The window title (string)
+    t.window.icon = "res/raw_sprites/png/tetrisblockred.png"                 -- Filepath to an image to use as the window's icon (string)
 
     t.window.width = Constants.tileWidth * Constants.windowScaleFactor * Constants.gridWidth + (Constants.windowWidthBuffer * Constants.tileWidth * Constants.windowScaleFactor)        --704                                                         -- The window width (number)
     t.window.height = Constants.tileHeight * Constants.windowScaleFactor * (Constants.gridHeight - Constants.gridHeightBuffer)                              -- The window height (number) --640
