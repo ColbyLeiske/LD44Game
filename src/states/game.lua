@@ -13,6 +13,7 @@ function game:enter()
 
     love.graphics.setDefaultFilter('nearest','nearest',1)
     Grid:initGrid()
+
 end
 
 function game:update(dt)

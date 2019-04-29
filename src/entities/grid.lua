@@ -9,6 +9,7 @@ Vector = require 'lib.hump.vector'
 ScoreManager = require 'src.entities.scoremanager'
 Keybinds = require 'src.states.keybinds'
 TimeManager = require 'src.entities.timemanager'
+AudioManager = require 'src.entities.audiomanager'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -25,6 +26,9 @@ function Grid:initGrid()
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
 	TimeManager:init()
+	AudioManager:init()
+
+	AudioManager:playtheme()
 
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
@@ -104,6 +108,10 @@ function Grid:update(dt)
 		self.startTime = self.currentTime
 	end
 
+	if PlayerInputManager.input:pressed('pause') then
+        love.audio.pause()
+    end
+
 	if PlayerInputManager.input:pressed('buyLLeft') or PlayerInputManager.input:pressed('buyLLeftAlt') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 
 	elseif PlayerInputManager.input:pressed('buyLRight') or PlayerInputManager.input:pressed('buyLRightAlt') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
 	elseif PlayerInputManager.input:pressed('buyStraight') or PlayerInputManager.input:pressed('buyStraightAlt') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
@@ -122,6 +130,7 @@ function Grid:tick()
 	--print(self.playerBlock.origin.y)
 	if didMove == false then
 		if self.playerBlock.origin.y == 2 then
+			AudioManager:playGameover()
 			Gamestate.push(gameover)
 		end
 		self:placePlayerBlock()	
@@ -366,6 +375,7 @@ function Grid:checkForCompletedLines()
 		if #rowsToDelete >= 4 then
 			ScoreManager:setMultiplier(1.5)
 			TimeManager:setMultiplier(1.5)
+			AudioManager:tetrisclear()
 		end
 		for k,v in pairs(rowsToDelete) do
 			newLine = {}
@@ -381,6 +391,7 @@ function Grid:checkForCompletedLines()
 			ScoreManager:setMultiplier(1)
 			TimeManager:setMultiplier(1)
 		end
+		AudioManager:clearedLine()
 	end
 end
 
