@@ -8,6 +8,7 @@ sprites = require 'src.util.spriteloader'
 Vector = require 'lib.hump.vector'
 ScoreManager = require 'src.entities.scoremanager'
 Keybinds = require 'src.states.keybinds'
+TimeManager = require 'src.entities.timemanager'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -23,6 +24,7 @@ local Grid = {
 function Grid:initGrid()
 	PlayerBlockManager:init() -- get the manager ready for block manipulation
 	ScoreManager:init()
+	TimeManager:init()
 
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
@@ -63,9 +65,7 @@ function Grid:update(dt)
 		self.startTime = self.currentTime
 	end
 
-	if PlayerInputManager.input:pressed('buyLLeft') then 
-		PlayerBlockManager:purchaseBlock(Blocks.TShape) 
-		print('hi')
+	if PlayerInputManager.input:pressed('buyLLeft') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 
 	elseif PlayerInputManager.input:pressed('buyLRight') then PlayerBlockManager:purchaseBlock(Blocks.Straight)
 	elseif PlayerInputManager.input:pressed('buyStraight') then PlayerBlockManager:purchaseBlock(Blocks.SLeft)
 	elseif PlayerInputManager.input:pressed('buySquare') then PlayerBlockManager:purchaseBlock(Blocks.LLeft)
@@ -86,9 +86,16 @@ function Grid:tick()
 		end
 		self:placePlayerBlock()	
 	end
+
+	TimeManager.time = TimeManager.time - self.timerThreshold
+	if TimeManager.time <= 0 then Gamestate.switch(menu) end
 end
 
-function Grid:draw()	
+function Grid:draw()
+	minutes = math.floor(TimeManager.time/60)
+	secondsTensPlace = math.floor((TimeManager.time%60)/10)
+	secondsOnesPlace = math.floor((TimeManager.time%60) - (secondsTensPlace*10))
+	love.graphics.print(minutes .. ":" .. secondsTensPlace .. secondsOnesPlace,66,100) -- render time left	
 	love.graphics.print(ScoreManager.score,88,34) -- render score -- needs to account for left right justificaiton
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
 	love.graphics.draw(sprites.gamebackground,0,0)
@@ -110,11 +117,27 @@ function Grid:draw()
 	end
 
 	i = 0
-	scale = 0.75
+	scale = 0.5
 	for k,v in pairs(Blocks) do
 		if k == 'None' then 
+		elseif k == 'SLeft' then 
+			self:DrawShape(v, Vector(5,(i*3.5 + 11)), scale, scale)
+			i = i + 1
 		else 
-			self:DrawShape(v, Vector(4,(i*3 + 7)), scale, scale) 
+			self:DrawShape(v, Vector(5,(i*3.5 + 12)), scale, scale) 
+			i = i + 1
+		end
+	end
+	
+	love.graphics.print('Key:', Constants.tileWidth,42,0,.12,.12)
+	love.graphics.print('Cost:', Constants.tileWidth*4-5,42,0,.12,.12)
+
+	i = 1
+	for k,v in pairs(Blocks) do 
+		if k == 'None' then
+		else
+			love.graphics.print(i .. ".", Constants.tileWidth, (15*i)+33,0,.1,.1)
+			love.graphics.print("- " .. v.cost,Constants.tileWidth*4, (15*i)+33,0,.12,.12)
 			i = i + 1
 		end
 	end
@@ -268,6 +291,7 @@ function Grid:checkForCompletedLines()
 			table.remove(self.grid,v)
 			table.insert(self.grid,5,newLine ) -- the 5 keeps the phantom floaters from appearing.... awesome right?
 			ScoreManager:clearedLine()
+			TimeManager:clearedLine()
 		end
 	end
 end
