@@ -37,6 +37,11 @@ function pause:update(dt)
                 GameState.switch(menu)
             end
         end
+
+        if mousex > 84*4 and mousex < (96)*4 and mousey > 85*4 and mousey < 90*4 then
+            print("clicked volume'")
+            AudioManager:clickedVolumeIcon()
+        end
     end
 
 end
@@ -61,15 +66,16 @@ function pause:draw()
     love.graphics.draw(sprites.pausebutton,65,52+44)
     love.graphics.print("Exit",81,52+44 + 2.5)
 
-    love.graphics.draw(sprites.volumeicon,10,100)
-    if AudioManager.volume > 5/100 then
-        love.graphics.draw(sprites.volumewave1,11,100)
+    love.graphics.draw(sprites.volumeicon,84,85)
+
+    if AudioManager.volume >= .3 then
+        love.graphics.draw(sprites.volumewave1,89,85)
     end
-    if AudioManager.volume > 66/100 then
-        love.graphics.draw(sprites.volumewave2,12,100)
+    if AudioManager.volume >= .6 then
+        love.graphics.draw(sprites.volumewave2,93,85)
     end
-    if AudioManager.volume > 99/100 then
-        love.graphics.draw(sprites.volumewave3,13,100)
+    if AudioManager.volume >= 1 then
+        love.graphics.draw(sprites.volumewave3,96,85)
     end
 
 end

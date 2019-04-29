@@ -1,4 +1,6 @@
-local AudioManager = {}
+local AudioManager = {
+    volume = .6
+}
 
 function AudioManager:init( )
     print("AudioManager init")
@@ -6,9 +8,9 @@ function AudioManager:init( )
     self.plop = love.audio.newSource('res/audio/plop.wav', 'static')
 	self.pling = love.audio.newSource('res/audio/pling.mp3', 'static')
 	self.coins = love.audio.newSource('res/audio/coins.wav', 'static')
-	self.chaching = love.audio.newSource('res/audio/chaching.wav', 'static')
+    self.chaching = love.audio.newSource('res/audio/chaching.wav', 'static')
+    love.audio.setVolume(self.volume)
 
-    self.volume = 1
 end
 
 function AudioManager:clearedLine()
@@ -32,11 +34,16 @@ function AudioManager:mute()
 end
 
 function AudioManager:clickedVolumeIcon()
-    if self.volume == 0 then 
-        self.volume = 1
-    else
+    if self.volume == 1 then
+        self.volume = .6
+    elseif self.volume == .6 then
+        self.volume = .3
+    elseif self.volume == .3 then
         self.volume = 0
+    elseif self.volume == 0 then
+        self.volume = 1
     end
+
     love.audio.setVolume(self.volume)
 end
 
