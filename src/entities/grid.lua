@@ -39,6 +39,12 @@ function Grid:initGrid()
 	menu = require 'src.states.menu'
 end
 
+function Grid:resume()
+	font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 32) -- the number denotes the font size
+	font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(font)
+end
+
 function Grid:update(dt)
 
 	if PlayerInputManager.input:down('soft', 0.12) then self:movePlayerBlockDown() end

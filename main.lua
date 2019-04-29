@@ -15,5 +15,5 @@ function love.load()
     Gamestate.registerEvents()
     PlayerInputManager:init()
 
-    Gamestate.switch(menu)
+    Gamestate.switch(game)
 end
