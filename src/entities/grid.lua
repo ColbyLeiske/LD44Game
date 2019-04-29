@@ -95,6 +95,7 @@ function Grid:update(dt)
 	elseif PlayerInputManager.input:pressed('buySRight') or PlayerInputManager.input:pressed('buySRightAlt') then PlayerBlockManager:purchaseBlock(Blocks.Square)
 	elseif PlayerInputManager.input:pressed('buyTShape') or PlayerInputManager.input:pressed('buyTShapeAlt') then PlayerBlockManager:purchaseBlock(Blocks.SRight)
 	end
+
 end
 
 function Grid:tick()
@@ -110,10 +111,25 @@ function Grid:tick()
 	end
 
 	TimeManager.time = TimeManager.time - self.timerThreshold
-	if TimeManager.time <= 0 then Gamestate.switch(gameover) end
+	if TimeManager.time <= 0 then Gamestate.switch(gameover) end 
 end
 
+opacity = 1
+goingUp = true
 function Grid:draw() 
+	if TimeManager.time <= 10 then  
+		if opacity > 80 then
+			goingUp = false
+			opacity = opacity - .4
+		elseif opacity <= 0 then
+			goingUp = true
+			opacity = opacity + .4
+		else 
+			if goingUp == true then opacity = opacity + .4
+			else opacity = opacity - .4 end
+		end
+		self:flashWarning(opacity/255)
+	end
 	minutes = math.floor(TimeManager.time/60)
 	secondsTensPlace = math.floor((TimeManager.time%60)/10)
 	secondsOnesPlace = math.floor((TimeManager.time%60) - (secondsTensPlace*10))
@@ -121,6 +137,8 @@ function Grid:draw()
 	love.graphics.print(ScoreManager.score,88,34) -- render score -- needs to account for left right justificaiton
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
 	love.graphics.draw(sprites.gamebackground,0,0)
+
+
 
 	--render game board
 	for j=1 , Constants.gridHeight do
@@ -177,6 +195,8 @@ function Grid:draw()
 			i = i + 1
 		end
 	end
+
+
 end
 
 function Grid:DrawShape(blockType,origin,sx,sy) 
@@ -187,7 +207,12 @@ function Grid:DrawShape(blockType,origin,sx,sy)
 		blockPos = v + origin
 		love.graphics.draw(blockType.blockSprite,blockPos.x * Constants.tileWidth*sx ,blockPos.y * Constants.tileHeight*sy, 0, sx, sy)
 	end
+end
 
+function Grid:flashWarning(opacity)
+	love.graphics.setColor(1,0,0,opacity)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(1,1,1)
 end
 
 function Grid:newPlayerBlock() 
