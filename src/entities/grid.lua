@@ -31,16 +31,8 @@ function Grid:initGrid()
 		end
 	end
 
-	--for testing
-	for col=2, Constants.gridWidth do
-		self.grid[25][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
-	end
-	for col=3, 20 do
-		self.grid[24][col] = {occupied = true,BlockType = Blocks.Square,isPlayerBlock = false}
-	end
-
 	self:newPlayerBlock() -- for testing
-	font = love.graphics.newFont(10)
+    font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 32) -- the number denotes the font size
 	font:setFilter('nearest','nearest',1)
 	love.graphics.setFont(font)
 	
@@ -92,20 +84,15 @@ function Grid:tick()
 		if self.playerBlock.origin.y == 2 then
 			Gamestate.switch(menu)
 		end
-		self:placePlayerBlock()
-		
-		
+		self:placePlayerBlock()	
 	end
-
-	--self:fixStraglers()
 end
 
-function Grid:draw()
+function Grid:draw()	
+	love.graphics.print(ScoreManager.score,88,34) -- render score -- needs to account for left right justificaiton
 	love.graphics.scale(Constants.windowScaleFactor,Constants.windowScaleFactor)
 	love.graphics.draw(sprites.gamebackground,0,0)
 
-	love.graphics.print(ScoreManager.score,20,5) -- render score
-												 -- render time left
 	--render game board
 	for j=1 , Constants.gridHeight do
 		for i=1, Constants.gridWidth do
@@ -115,21 +102,20 @@ function Grid:draw()
 		end
 	end
 
-	--render queue of blocks ahead
-	--love.graphics.draw(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue].blockSprite,50,50)
+	--render queue of blocks
 	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue],Vector(18,1))
 
 	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
 		self:DrawShape(PlayerBlockManager.blockQueue[i],Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
 	end
 
-	i = 12
-	scale = 0.5
+	i = 0
+	scale = 0.75
 	for k,v in pairs(Blocks) do
 		if k == 'None' then 
 		else 
-			self:DrawShape(v, Vector(5,i), scale, scale) 
-			i = i + (v.blockHeight) + 1
+			self:DrawShape(v, Vector(4,(i*3 + 7)), scale, scale) 
+			i = i + 1
 		end
 	end
 end
