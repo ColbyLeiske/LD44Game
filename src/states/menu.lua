@@ -1,5 +1,7 @@
-Input = require('lib.boipushy.Input')
+
 Colors = require 'src.util.colors'
+PlayerInputManager = require 'src.entities.playerinputmanager'
+
 local keybinds
 local credits
 
@@ -23,17 +25,11 @@ function menu:init()
   credits = require 'src.states.credits'
   keybinds = require 'src.states.keybinds'
   game = require 'src.states.game'
-
+  
 end
 
 function menu:enter()
-  self.input = Input()
-  self.input:bind('mouse1', 'left_click')
-  font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 32) -- the number denotes the font size
-  love.graphics.setFont(font)
-  self.topBannerHeight = 400
-
-
+  font = love.graphics.newFont(32)
   buttons[1] = newButton("Start Game" , function() Gamestate.switch(game) end)
   buttons[2] = newButton("Keybinds" , function() Gamestate.switch(keybinds) end)
   buttons[3] = newButton("Credits" , function() Gamestate.switch(credits) end)
@@ -45,7 +41,7 @@ function menu:update(dt)
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     local mousex, mousey = love.mouse.getPosition()
     button.active = mousex > buttonStartX and mousex < buttonStartX + button_width and mousey > buttony and mousey < buttony + button_height
-    if self.input:pressed('left_click') and button.active then
+    if PlayerInputManager.input:pressed('left_click') and button.active then
       button.fn()
     end
   end

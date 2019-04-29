@@ -16,6 +16,16 @@ function spriteloader:loadSprites()
 
     self.leaderboard = love.graphics.newImage("res/raw_sprites/png/leaderboard.png")
     self.gamebackground = love.graphics.newImage('res/raw_sprites/png/gamebackground.png')
+    self.pausemenu = love.graphics.newImage('res/raw_sprites/png/pausemenu.png')
+    self.pausebutton = love.graphics.newImage('res/raw_sprites/png/pausebutton.png')
+    self.gameoverbackground = love.graphics.newImage('res/raw_sprites/png/gameoverbackground.png')
+    self.gameoverbutton = love.graphics.newImage('res/raw_sprites/png/gameoverbutton.png')
+    
+    self.volumeicon = love.graphics.newImage('res/raw_sprites/png/volumeicon.png')
+    self.volumewave1 = love.graphics.newImage('res/raw_sprites/png/volumewave1.png')
+    self.volumewave2 = love.graphics.newImage('res/raw_sprites/png/volumewave2.png')
+    self.volumewave3 = love.graphics.newImage('res/raw_sprites/png/volumewave3.png')
+
     self.hasLoaded = true
 end
 
