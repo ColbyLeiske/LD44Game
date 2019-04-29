@@ -109,7 +109,7 @@ function Grid:update(dt)
 	end
 
 	if PlayerInputManager.input:pressed('pause') then
-        love.audio.pause()
+        --love.audio.pause()
     end
 
 	if PlayerInputManager.input:pressed('buyLLeft') or PlayerInputManager.input:pressed('buyLLeftAlt') then PlayerBlockManager:purchaseBlock(Blocks.TShape) 

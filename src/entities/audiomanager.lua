@@ -8,6 +8,7 @@ function AudioManager:init( )
 	self.coins = love.audio.newSource('res/audio/coins.wav', 'static')
 	self.chaching = love.audio.newSource('res/audio/chaching.wav', 'static')
 
+    self.volume = 1
 end
 
 function AudioManager:clearedLine()
@@ -24,6 +25,19 @@ end
 
 function AudioManager:playGameover()
 	love.audio.stop()
+end
+
+function AudioManager:mute() 
+    love.audio.setVolume(0)
+end
+
+function AudioManager:clickedVolumeIcon()
+    if self.volume == 0 then 
+        self.volume = 1
+    else
+        self.volume = 0
+    end
+    love.audio.setVolume(self.volume)
 end
 
 return AudioManager

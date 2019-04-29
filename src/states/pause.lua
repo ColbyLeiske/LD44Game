@@ -61,6 +61,17 @@ function pause:draw()
     love.graphics.draw(sprites.pausebutton,65,52+44)
     love.graphics.print("Exit",81,52+44 + 2.5)
 
+    love.graphics.draw(sprites.volumeicon,10,100)
+    if AudioManager.volume > 5/100 then
+        love.graphics.draw(sprites.volumewave1,11,100)
+    end
+    if AudioManager.volume > 66/100 then
+        love.graphics.draw(sprites.volumewave2,12,100)
+    end
+    if AudioManager.volume > 99/100 then
+        love.graphics.draw(sprites.volumewave3,13,100)
+    end
+
 end
 
 return pause
