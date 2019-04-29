@@ -9,6 +9,7 @@ Vector = require 'lib.hump.vector'
 ScoreManager = require 'src.entities.scoremanager'
 Keybinds = require 'src.states.keybinds'
 TimeManager = require 'src.entities.timemanager'
+SoundEffects = require 'src.util.soundeffects'
 
 local Grid = {
 	tileWidth = Constants.tileWidth*Constants.windowScaleFactor,
@@ -339,6 +340,9 @@ function Grid:checkForCompletedLines()
 		if #rowsToDelete >= 4 then
 			ScoreManager:setMultiplier(1)
 			TimeManager:setMultiplier(1)
+			love.audio.play(SoundEffects.plop)
+		else
+			love.audio.play(SoundEffects.pling)
 		end
 	end
 end
