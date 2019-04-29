@@ -132,10 +132,22 @@ function Grid:draw()
 	end
 
 	--render queue of blocks
-	self:DrawShape(PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue].blockType,Vector(18,1))
 
+	topBlock = PlayerBlockManager.blockQueue[#PlayerBlockManager.blockQueue]
+	offsetX = (4-topBlock.blockWidth)/2
+	offsetY = (3-topBlock.blockHeight)/2
+	if topBlock.blockSprite == Blocks.SLeft.blockSprite or topBlock.blockSprite == Blocks.SRight.blockSprite then offsetY = offsetY-1
+	elseif topBlock.blockSprite == Blocks.Straight.blockSprite then offsetX = offsetX+1 end
+	self:DrawShape(topBlock,Vector(18+offsetX,1+offsetY))
+
+	scale = 0.75
 	for i = (#PlayerBlockManager.blockQueue-1),1,-1 do
-		self:DrawShape(PlayerBlockManager.blockQueue[i].blockType,Vector(18,2+((math.abs(i-#PlayerBlockManager.blockQueue))*3.5)))
+		currentBlock = PlayerBlockManager.blockQueue[i]
+		offsetX = (4-currentBlock.blockWidth)/2
+		offsetY = (3-currentBlock.blockHeight)/2
+		if currentBlock.blockSprite == Blocks.SLeft.blockSprite or currentBlock.blockSprite == Blocks.SRight.blockSprite then offsetY = offsetY-1
+		elseif currentBlock.blockSprite == Blocks.Straight.blockSprite then offsetX = offsetX+1 end
+		self:DrawShape(currentBlock,Vector(24.5+offsetX, i*4+4+offsetY),scale,scale)
 	end
 
 	i = 0
