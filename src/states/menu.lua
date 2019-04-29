@@ -1,3 +1,5 @@
+
+Colors = require 'src.util.colors'
 PlayerInputManager = require 'src.entities.playerinputmanager'
 
 local keybinds
@@ -28,7 +30,6 @@ end
 
 function menu:enter()
   font = love.graphics.newFont(32)
-
   buttons[1] = newButton("Start Game" , function() Gamestate.switch(game) end)
   buttons[2] = newButton("Keybinds" , function() Gamestate.switch(keybinds) end)
   buttons[3] = newButton("Credits" , function() Gamestate.switch(credits) end)
@@ -46,8 +47,25 @@ function menu:update(dt)
   end
 end
 
+local titleColor = {
+  type = "gradient",
+  color1 = {1, 0, 0.4},
+  color2 = {1,0,0,0.2},
+  direction = "up"
+}
 
 function menu:draw()
+  love.graphics.setColor(Colors.darkGreen)
+  love.graphics.rectangle("fill", 0, 0, window_width,window_height)
+
+  love.graphics.setColor(Colors.darkGreen)
+  love.graphics.rectangle("fill", 0, 0, window_width,window_height)
+
+  love.graphics.setColor(1,1,1)
+
+  local title = love.graphics.newImage("res/raw_sprites/png/tetrisTempoFinal.png")
+  love.graphics.draw(title, 120 , 0, 0, 2.5, 2.5)
+
   for k, button in ipairs(buttons) do
     local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
     --color that displays when the cursor is over the button
