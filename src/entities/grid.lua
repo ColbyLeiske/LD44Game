@@ -33,7 +33,7 @@ function Grid:initGrid()
 		end
 	end
 
-	self:newPlayerBlock() -- for testing
+	self:newPlayerBlock()
     font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 32) -- the number denotes the font size
 	font:setFilter('nearest','nearest',1)
 	love.graphics.setFont(font)
@@ -49,7 +49,25 @@ function Grid:resume()
 end
 
 function Grid:update(dt)
-	if ScoreManager.score >= 15 and ScoreManager.score < 25 then
+	isClear = lume.all(self.grid[5],function(x) return (x.occupied == false) or (x.occupied == true and x.isPlayerBlock == true) end)
+	if isClear == false then
+		Gamestate.push(gameover)
+		return
+	end
+	isClear = lume.all(self.grid[4],function(x) return (x.occupied == false) or (x.occupied == true and x.isPlayerBlock == true) end)
+	if isClear == false then
+		Gamestate.push(gameover)
+		return
+	end
+	isClear = lume.all(self.grid[3],function(x) return (x.occupied == false) or (x.occupied == true and x.isPlayerBlock == true) end)
+	if isClear == false then
+		Gamestate.push(gameover)
+		return
+	end
+
+	if ScoreManager.score < 15 then
+		self.timerThreshold = .5
+	elseif ScoreManager.score >= 15 and ScoreManager.score < 25 then
 		self.timerThreshold = .3
 	elseif ScoreManager.score >= 25 and ScoreManager.score < 35 then
 		self.timerThreshold = .25
@@ -65,6 +83,8 @@ function Grid:update(dt)
 		self.timerThreshold = .1
 	end
 
+	self:checkForCompletedLines()
+	self:fixPhantomBlocks() 
 	if PlayerInputManager.input:down('soft', 0.12) then self:movePlayerBlockDown() end
 	if PlayerInputManager.input:down('right', 0.12) then self:movePlayerBlockXAxis(Vector(1,0)) end
 	if PlayerInputManager.input:down('left', 0.12) then self:movePlayerBlockXAxis(Vector(-1,0)) end
@@ -77,9 +97,6 @@ function Grid:update(dt)
 	
 	if PlayerInputManager.input:down('counter',.25) then self:rotate(-1) end
 	if PlayerInputManager.input:down('clockwise',.25) then self:rotate(1) end
-
-	self:checkForCompletedLines()
-
 
 	self.currentTime = love.timer.getTime()
 	if self.currentTime - self.startTime >= self.timerThreshold then
@@ -142,16 +159,15 @@ function Grid:draw()
 
 	scale = 0.75
 	for i = (5-1),1,-1 do
-		currentBlock = PlayerBlockManager.blockQueue[i].blockType
+		local currentBlock = PlayerBlockManager.blockQueue[i].blockType
 		offsetX = (4-currentBlock.blockWidth)/2
 		offsetY = (3-currentBlock.blockHeight)/2
 		if currentBlock.blockSprite == Blocks.SLeft.blockSprite or currentBlock.blockSprite == Blocks.SRight.blockSprite then offsetY = offsetY-1
 		elseif currentBlock.blockSprite == Blocks.Straight.blockSprite then offsetX = offsetX+1 end
-		--self:DrawShape(currentBlock,Vector(24.5+offsetX, i*4+4+offsetY),scale,scale)
-		self:DrawShape(currentBlock,Vector(24.5+offsetX, (math.abs(i-5))*4+4+offsetY),scale,scale)
-		
+		self:DrawShape(currentBlock,Vector(24.5+offsetX, (math.abs(i-5))*4+4+offsetY),scale,scale)	
 	end
 
+	-- draw shop
 	i = 0
 	scale = 0.5
 	for k,v in pairs(Blocks) do
@@ -173,7 +189,7 @@ function Grid:draw()
 		if k == 'None' then
 		else
 			love.graphics.print(i .. ".", Constants.tileWidth, (15*i)+33,0,.1,.1)
-			love.graphics.print("- " .. v.cost,Constants.tileWidth*4, (15*i)+33,0,.12,.12)
+			love.graphics.print("-" .. v.cost .. '\"',Constants.tileWidth*4, (15*i)+33,0,.12,.12)
 			i = i + 1
 		end
 	end
@@ -341,6 +357,33 @@ function Grid:checkForCompletedLines()
 			TimeManager:setMultiplier(1)
 		end
 	end
+end
+
+function Grid:fixPhantomBlocks()
+	placesAllowed = {}
+
+	origin = self.playerBlock.origin --we know this is in our grid....
+	for k,v in pairs(self.playerBlock.blockType.blocks[self.playerBlock.blockType.currentRotation]) do
+		v = origin + v 
+		table.insert( placesAllowed,v)
+	end 
+
+	for i = 1, #self.grid do
+		for j = 1 , #self.grid[i] do
+			if self.grid[i][j].isPlayerBlock == true then 
+				local placesChecked = -1
+				for k,v in pairs(placesAllowed) do
+					if j == v.x and i == v.y then
+						placesChecked = placesChecked + 1
+					end
+				end
+				if placesChecked == -1 then
+					self.grid[i][j] = {occupied = false,BlockType = Blocks.None,isPlayerBlock = false,newlyPlaced = false}
+				end
+			end
+		end
+	end
+
 end
 
 return Grid
