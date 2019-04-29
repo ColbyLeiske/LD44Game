@@ -35,7 +35,7 @@ function leaderboard:enter()
 end
 
 function leaderboard:update(dt)
-   
+
 end
 
 function leaderboard:draw()
@@ -73,7 +73,7 @@ function leaderboard:draw()
 
 end
 
-function leaderboard:keypressed(key) 
+function leaderboard:keypressed(key)
    if key == 'q' then
     love.event.quit()
    end
