@@ -31,7 +31,6 @@ function playerblockmanager:generateNewBlock()
 end
 
 function playerblockmanager:purchaseBlock(blockType)
-
     for i = #self.blockQueue,1,-1 do
         if self.blockQueue[i].purchased == false then
             self.blockQueue[i] = {blockType = blockType,purchased = true}
