@@ -28,6 +28,8 @@ local Blocks = {
 				Vector(-1,1)},
 		},
 		blockSprite = Sprites.blueBlock,
+		blockWidth = 3,
+		blockHeight = 2,
 		cost = 5
 	},
 	LRight = {
@@ -61,6 +63,8 @@ local Blocks = {
 			},
 		},
 		blockSprite = Sprites.brownBlock,
+		blockWidth = 3,
+		blockHeight = 2,
 		cost = 5
 	},
 	Straight = {
@@ -82,6 +86,8 @@ local Blocks = {
 			},
 		},
 		blockSprite = Sprites.lightBlueBlock,
+		blockWidth = 4,
+		blockHeight = 1,
 		cost = 5
 	},
 	Square = {
@@ -97,6 +103,8 @@ local Blocks = {
 			},
 		},
 		blockSprite = Sprites.tanBlock,
+		blockWidth = 2,
+		blockHeight = 2,
 		cost = 5
 	},
 	SLeft = {
@@ -130,6 +138,8 @@ local Blocks = {
 			},
 		},
 		blockSprite = Sprites.redBlock,
+		blockWidth = 3,
+		blockHeight = 2,
 		cost = 5
 	},
 	SRight = {
@@ -163,6 +173,8 @@ local Blocks = {
 			},
 		},
 		blockSprite = Sprites.oliveBlock,
+		blockWidth = 3,
+		blockHeight = 2,
 		cost = 5
 	},--Z lol
 	TShape = {
@@ -188,6 +200,8 @@ local Blocks = {
 			Vector(0,-1),},
 		},
 		blockSprite = Sprites.greenBlock,
+		blockWidth = 3,
+		blockHeight = 2,
 		cost = 5
 	}
 }

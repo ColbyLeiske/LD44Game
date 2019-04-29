@@ -33,7 +33,6 @@ end
 function playerblockmanager:purchaseBlock(blockType)
     self.blockQueue[#self.blockQueue] = blockType
 
-
     TimeManager.time = TimeManager.time-blockType.cost
 end
 
