@@ -23,10 +23,7 @@ function leaderboard:enter()
     if self.noConnection == false then
         self.leaderboard = json.decode(result).dreamlo.leaderboard.entry
     end
-
-    for k,v in pairs(self.leaderboard) do
-        print(v.name .. " - " .. v.score)
-    end
+    
     self.font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 20) -- the number denotes the font size
     love.graphics.setFont(self.font)
 

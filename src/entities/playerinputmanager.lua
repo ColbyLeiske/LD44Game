@@ -16,7 +16,8 @@ local PlayerInputManager = {
         ['buySLeft'] = '5',
         ['buySRight'] = '6',
         ['buyTShape'] = '7',
-      },
+        ['pause'] = 'escape',
+    },
 }
 
 function PlayerInputManager:init( ) 

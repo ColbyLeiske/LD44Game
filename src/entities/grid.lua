@@ -39,6 +39,13 @@ function Grid:initGrid()
 	love.graphics.setFont(font)
 	
 	menu = require 'src.states.menu'
+	gameover = require 'src.states.gameover'
+end
+
+function Grid:resume()
+	font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 32) -- the number denotes the font size
+	font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(font)
 end
 
 function Grid:update(dt)
@@ -82,7 +89,7 @@ function Grid:tick()
 	--print(self.playerBlock.origin.y)
 	if didMove == false then
 		if self.playerBlock.origin.y == 2 then
-			Gamestate.switch(menu)
+			Gamestate.push(gameover)
 		end
 		self:placePlayerBlock()	
 	end
