@@ -6,6 +6,7 @@ PlayerInputManager = require 'src.entities.playerinputmanager'
 GameState = require 'lib.hump.gamestate'
 menu = require 'src.states.menu'
 keybinding = require 'src.states.keybinds'
+AudioManager = require 'src.entities.audiomanager'
 local pause = {}
 
 function pause:enter(from)
@@ -18,6 +19,7 @@ end
 
 function pause:update(dt)
     if PlayerInputManager.input:pressed('pause') then
+        AudioManager:playtheme()
         GameState.pop()
     end
 
@@ -25,6 +27,7 @@ function pause:update(dt)
     if PlayerInputManager.input:pressed('left_click') then 
         if mousex > 65*4 and mousex < (64+48) * 4 then
             if mousey > 52*4 and mousey < (52+12)*4 then
+                AudioManager:playtheme()
                 GameState.pop()
             end
             if mousey > 52*4 + 17.5*4 and mousey < (52+12)*4 + 17.5*4 then
