@@ -8,8 +8,6 @@ pause = require 'src.states.pause'
 local game = {}
 
 function game:enter()
-    logger:log("Starting Game Intialization")
-    logger:log("Game Initialized")
 
     love.graphics.setDefaultFilter('nearest','nearest',1)
     Grid:initGrid()

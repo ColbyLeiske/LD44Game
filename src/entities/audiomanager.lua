@@ -3,8 +3,8 @@ local AudioManager = {
 }
 
 function AudioManager:init( )
-    print("AudioManager init")
     self.tetristheme = love.audio.newSource('res/audio/tetrisTheme.ogg', 'stream')
+    self.tetristheme:setLooping(true)
     self.plop = love.audio.newSource('res/audio/plop.wav', 'static')
 	self.pling = love.audio.newSource('res/audio/pling.mp3', 'static')
 	self.coins = love.audio.newSource('res/audio/coins.wav', 'static')
@@ -22,7 +22,7 @@ function AudioManager:tetrisclear()
 end
 
 function AudioManager:playtheme()
-	love.audio.play(self.tetristheme)
+	self.tetristheme:play()
 end
 
 function AudioManager:mute() 

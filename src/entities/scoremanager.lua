@@ -2,7 +2,6 @@
 local ScoreManager = {}
 
 function ScoreManager:init( )
-    print("ScoreManager init")
     self.score = 0
     self.multiplier = 1
 end

@@ -12,8 +12,6 @@ menu = require 'src.states.menu'
 local leaderboard = {}
 
 function leaderboard:enter(from)
-    logger:log("Starting Leaderboard Intialization")
-    logger:log("Leaderboard Initialized")
 
     Dreamlo.setSecretCode(dreamlo_secret)
     Dreamlo.setPublicCode(dreamlo_public)

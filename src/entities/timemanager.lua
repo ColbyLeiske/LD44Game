@@ -1,7 +1,6 @@
 local TimeManager = {}
 
 function TimeManager:init( )
-    print("TimeManager init")
     self.time = 90
     self.multiplier = 1
 end
