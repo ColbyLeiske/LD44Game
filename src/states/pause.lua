@@ -37,7 +37,6 @@ function pause:update(dt)
         end
 
         if mousex > 84*4 and mousex < (96)*4 and mousey > 85*4 and mousey < 90*4 then
-            print("clicked volume'")
             AudioManager:clickedVolumeIcon()
         end
     end
