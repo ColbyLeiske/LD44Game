@@ -137,6 +137,7 @@ function keybinds:keyreleased(key)
         return
       end
     end
+    PlayerInputManager.input:unbind(bindNextKeyPress.currentKey)
     PlayerInputManager.input:bind(key, bindNextKeyPress.inputAction)
     PlayerInputManager.keyActionAssociations[bindNextKeyPress.inputAction] = key
     bindNextKeyPress.check = false
