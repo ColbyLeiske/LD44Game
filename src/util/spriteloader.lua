@@ -26,6 +26,10 @@ function spriteloader:loadSprites()
     self.volumewave2 = love.graphics.newImage('res/raw_sprites/png/volumewave2.png')
     self.volumewave3 = love.graphics.newImage('res/raw_sprites/png/volumewave3.png')
 
+    self.menubackground = love.graphics.newImage('res/raw_sprites/png/menubackground.png')
+    self.keybindsbackground = love.graphics.newImage('res/raw_sprites/png/keybindsbackground.png')
+    self.scoresbackground = love.graphics.newImage('res/raw_sprites/png/scoresbackground.png')
+
     self.hasLoaded = true
 end
 

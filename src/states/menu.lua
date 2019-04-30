@@ -1,99 +1,69 @@
 
 Colors = require 'src.util.colors'
 PlayerInputManager = require 'src.entities.playerinputmanager'
-
-local keybinds
-local credits
+Sprite = require 'src.util.spriteloader'
+AudioManager = require 'src.entities.audiomanager'
 
 local menu = {}
-local buttons = {}
-
-local font = nil
-
-
-local window_width = love.graphics.getWidth()
-local window_height = love.graphics.getHeight()
-
-local button_height = 50
-local button_width = window_width * (1/3)
-local buttonStartY = 280 -- we will change this
-local buttonStartX = (window_width * 0.5) - (button_width * 0.5)
-local buttonMargin = 25
-
 
 function menu:init()
-  credits = require 'src.states.credits'
-  keybinds = require 'src.states.keybinds'
-  game = require 'src.states.game'
-  
-end
+  self.credits = require 'src.states.credits'
+  self.keybinds = require 'src.states.keybinds'
+  self.game = require 'src.states.game'
+  self.leaderboard = require 'src.states.leaderboard'
 
-function menu:enter()
-  font = love.graphics.newFont(32)
-  buttons[1] = newButton("Start Game" , function() Gamestate.switch(game) end)
-  buttons[2] = newButton("Keybinds" , function() Gamestate.switch(keybinds) end)
-  buttons[3] = newButton("Credits" , function() Gamestate.switch(credits) end)
-  buttons[4] = newButton("Exit" ,function() love.event.quit(0) end)
+  self.font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 8) -- the number denotes the font size
+	self.font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(self.font)
 end
 
 function menu:update(dt)
-  for k, button in ipairs(buttons) do
-    local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
-    local mousex, mousey = love.mouse.getPosition()
-    button.active = mousex > buttonStartX and mousex < buttonStartX + button_width and mousey > buttony and mousey < buttony + button_height
-    if PlayerInputManager.input:pressed('left_click') and button.active then
-      button.fn()
+  local mousex, mousey = love.mouse.getPosition()
+
+  if PlayerInputManager.input:pressed('left_click') then
+    if mousex > 602 and mousex < 662 and mousey > 546 and mousey < 605 then
+      AudioManager:clickedVolumeIcon()  
+    end
+    if mousex > 264 and mousex < 441 then
+
+      if mousey > 364 and mousey < 411 then
+          Gamestate.switch(self.game)
+      end
+      if mousey > 421 and mousey < 468 then
+        Gamestate.switch(self.leaderboard)
+      end
+      if mousey > 476 and mousey < 526 then
+        Gamestate.switch(self.keybinds)
+      end
+      if mousey > 533 and mousey < 580 then
+        love.event.quit(0)
+      end
     end
   end
 end
 
-local titleColor = {
-  type = "gradient",
-  color1 = {1, 0, 0.4},
-  color2 = {1,0,0,0.2},
-  direction = "up"
-}
 
 function menu:draw()
-  love.graphics.setColor(Colors.darkGreen)
-  love.graphics.rectangle("fill", 0, 0, window_width,window_height)
+  love.graphics.scale(4,4)
+  love.graphics.draw(Sprite.menubackground, 0 , 0, 0)
 
-  love.graphics.setColor(Colors.darkGreen)
-  love.graphics.rectangle("fill", 0, 0, window_width,window_height)
+  love.graphics.print("Play",78.5,93.5)
+  love.graphics.print("Leaders",71.25,14+93.5)
+  love.graphics.print("Key Binds",68.5,28+93.5)
+  love.graphics.print("Exit",80,42+93.5)
 
-  love.graphics.setColor(1,1,1)
+  love.graphics.draw(sprites.volumeicon,153.4,140.5)
 
-  local title = love.graphics.newImage("res/raw_sprites/png/tetrisTempoFinal.png")
-  love.graphics.draw(title, 120 , 0, 0, 2.5, 2.5)
-
-  for k, button in ipairs(buttons) do
-    local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
-    --color that displays when the cursor is over the button
-    if button.active then
-        color = {0.8, 0.8, 0.8, 1.0}
-    else
-        color = {0.4, 0.4, 0.5, 1.0}
-    end
-    --constructing of the buttons
-    love.graphics.setColor(unpack(color))
-    love.graphics.rectangle("fill", buttonStartX, buttony, button_width, button_height)
-
-    --text on the buttons
-    love.graphics.setColor(0,0,0,1)
-    local textW = font:getWidth(button.text)
-    local textH = font:getHeight(button.text)
-    love.graphics.print(button.text, font, (window_width * 0.5) - textW * 0.5, buttony + (textH * 0.2)) --warning for this)
-    love.graphics.setColor(1,1,1,1)
+  if AudioManager.volume >= .3 then
+      love.graphics.draw(sprites.volumewave1,158.4,140.5)
   end
-end
+  if AudioManager.volume >= .6 then
+      love.graphics.draw(sprites.volumewave2,161.4,140.5)
+  end
+  if AudioManager.volume >= 1 then
+      love.graphics.draw(sprites.volumewave3,164.3,140.5)
+  end
 
-function newButton(text, fn)
-    return {
-      text = text,
-      fn = fn,
-      active = false,
-    }
 end
-
 
 return menu

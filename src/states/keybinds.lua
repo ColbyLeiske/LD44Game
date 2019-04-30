@@ -1,42 +1,32 @@
 PlayerInputManager = require 'src.entities.playerinputmanager'
+Sprite = require 'src.util.spriteloader'
+AudioManager = require 'src.entities.audiomanager'
 
-local menu
 local keybinds = {}
-local buttons = {}
-local backButtonHolder = {}
 
-local font
-
-local window_width = love.graphics.getWidth()
-local window_height = love.graphics.getHeight()
-
-local button_height = 50
-local button_width = (window_width/5)
-local buttonStartY = 15 -- we will change this
-local buttonStartX = (window_width/3) + (button_width) + 50
-local backButtonStartX = 90
-local backButton_width = 475
-local backButtonStartY = 15
-local buttonMargin = 35
-local bindNextKeyPress = {check=false, inputAction=''}
+local bindNextKeyPress = {check=false, inputAction='', currentKey = ''}
 
 function keybinds:init()
   menu = require 'src.states.menu'
-  self.buttons = {}
-  self.buttons[1] = self:newButton("Back" , function() 
-    if self.doubleFrom ~= nil then
-      Gamestate.pop()
-    else
-      Gamestate.switch(self.from) 
-    end
-  end,'back')
-  self.buttons[3] = self:newButton("Drag left", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['left'],'left') end, 'left')
-  self.buttons[5] = self:newButton("Drag right", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['right'],'right') end,'right')
-  self.buttons[4] = self:newButton("Soft drop", function()self:setupNewKeybind(PlayerInputManager.keyActionAssociations['soft'],'soft') end,'soft')
-  self.buttons[2] = self:newButton("Hard drop", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['hard'],'hard') end,'hard')
-  self.buttons[6] = self:newButton("Rotate clockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['clockwise'],'clockwise') end, 'clockwise')
-  self.buttons[7] = self:newButton("Rotate counterclockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['counter'],'counter') end,'counter')
-  print(#self.buttons)
+  
+  -- self.buttons[1] = self:newButton("Back" , function() 
+  --   if self.doubleFrom ~= nil then
+  --     Gamestate.pop()
+  --   else
+  --     Gamestate.switch(self.from) 
+  --   end
+  -- end,'back')
+  -- self.buttons[3] = self:newButton("Drag left", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['left'],'left') end, 'left')
+  -- self.buttons[5] = self:newButton("Drag right", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['right'],'right') end,'right')
+  -- self.buttons[4] = self:newButton("Soft drop", function()self:setupNewKeybind(PlayerInputManager.keyActionAssociations['soft'],'soft') end,'soft')
+  -- self.buttons[2] = self:newButton("Hard drop", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['hard'],'hard') end,'hard')
+  -- self.buttons[6] = self:newButton("Rotate clockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['clockwise'],'clockwise') end, 'clockwise')
+  -- self.buttons[7] = self:newButton("Rotate counterclockwise", function() self:setupNewKeybind(PlayerInputManager.keyActionAssociations['counter'],'counter') end,'counter')
+  -- print(#self.buttons)
+
+  self.font = love.graphics.newFont("res/fonts/goodbyeDespair.ttf", 8) -- the number denotes the font size
+	self.font:setFilter('nearest','nearest',1)
+	love.graphics.setFont(self.font)
 end
 
 function keybinds:enter(from,doubleFrom)
@@ -46,84 +36,117 @@ end
 
 
 function keybinds:setupNewKeybind(prevKey,inputAction)
-
   PlayerInputManager.input:unbind(prevKey)
   bindNextKeyPress = {check = true, inputAction = inputAction }
 end
 
 function keybinds:update()
-  for k, button in ipairs(self.buttons) do
-    local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
-    local mousex, mousey = love.mouse.getPosition()
-    button.active = mousex > buttonStartX and mousex < buttonStartX + button_width and mousey > buttony and mousey < buttony + button_height
-    if PlayerInputManager.input:pressed('left_click') and button.active then
-      button.fn()
-end
+  local mousex, mousey = love.mouse.getPosition()
 
+  if PlayerInputManager.input:pressed('left_click') then
+    print ("X:" .. mousex .. ' Y: ' .. mousey)
+    --back button
+    if isInBounds(288,512,414,558) then
+      if bindNextKeyPress.check == true then
+        PlayerInputManager.keyActionAssociations[bindNextKeyPress.inputAction] = bindNextKeyPress.currentKey
+        bindNextKeyPress = {check=false, inputAction='', currentKey = ''}
+      end
+      if self.doubleFrom ~= nil then
+        Gamestate.pop()
+      else
+        Gamestate.switch(self.from) 
+      end
+    end
+
+    if isInBounds(321,297,351,326) then
+      --w
+      self:prepareNewBinding('hard')
+    elseif isInBounds(321,152,351,183) then
+      --a
+      self:prepareNewBinding('left')
+    elseif isInBounds(321,248,350,279) then
+      --s
+      self:prepareNewBinding('soft')
+    elseif isInBounds(320,200,350,230) then
+      --d
+      self:prepareNewBinding('right')
+    elseif isInBounds(321,345,349,374) then
+      --c
+      self:prepareNewBinding('clockwise')
+    elseif isInBounds(321,392,351,424) then
+      --v
+      self:prepareNewBinding('counter')
+    end
   end
 end
 
 function keybinds:draw()
+  love.graphics.scale(4,4)
+  love.graphics.draw(Sprite.keybindsbackground,0,0)
 
-  for k, button in ipairs(self.buttons) do
+  love.graphics.print("Move Left",114/4 + 2,154/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['left'],114/4 + 53.5 , 154/4)
 
-    local printValue = (PlayerInputManager.keyActionAssociations[button.inputAction])
-    local buttony = buttonStartY + ((k-1) * buttonMargin + (k-1) * button_height)
-    --color that displays when the cursor is over the button
-    if button.active then
-        color = {0.8, 0.8, 0.8, 1.0}
-    else
-        color = {0.4, 0.4, 0.5, 1.0}
-    end
+  love.graphics.print("Move Right",114/4 + 2,204/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['right'],114/4 + 53.5 , 204/4)
+
+  love.graphics.print("Soft Fall",114/4 + 2,250/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['soft'],114/4 + 53.5 , 250/4)
+
+  love.graphics.print("Hard Fall",114/4 + 2,300/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['hard'],114/4 + 53.5 , 300/4)
+
+  love.graphics.print("Clockwise",114/4 + 2,350/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['clockwise'],114/4 + 53.5 , 350/4)
+
+  love.graphics.print("Counter",114/4 + 2,396/4)
+  love.graphics.print(PlayerInputManager.keyActionAssociations['counter'],114/4 + 53.5 , 396/4)
+
+  love.graphics.print("Buy T",80 + 20,154/4 - 6)
+  love.graphics.print("Buy I",80 + 20,204/4 - 6)
+  love.graphics.print("Buy S",80 + 20,250/4 - 6)
+  love.graphics.print("Buy L",80 + 20,300/4 - 6)
+  love.graphics.print("Buy J",80 + 20,350/4 - 6)
+  love.graphics.print("Buy O",80 + 20,396/4 - 6)
+  love.graphics.print("Buy Z",80 + 20,419/4 )
+
+  love.graphics.print("1",80 + 50,154/4 - 6)
+  love.graphics.print("2",80 + 50,204/4 - 6)
+  love.graphics.print("3",80 + 50,250/4 - 6)
+  love.graphics.print("4",80 + 50,300/4 - 6)
+  love.graphics.print("5",80 + 50,350/4 - 6)
+  love.graphics.print("6",80 + 50,396/4 - 6)
+  love.graphics.print("7",80 + 50,419/4 )
+
+  love.graphics.print("Back",288/4 + 6.5,512/4 + 2.5 )
 
 
-    love.graphics.setColor(unpack(color))
-    --back button
-    love.graphics.rectangle("fill", backButtonStartX, backButtonStartY, backButton_width, button_height)
-    --rest of the buttons
-    love.graphics.rectangle("fill", buttonStartX, buttony + 82, button_width, button_height)
-    --text on the buttons
-    love.graphics.setColor(0,0,0,1)
-    local textW = font:getWidth(button.text)
-    local textH = font:getHeight(button.text)
---    love.graphics.print(backButton)
-    love.graphics.print(printValue, font, (window_width * 0.5) + 133 , buttony + (textH * 0.2) + 85) --warning for this)
-    love.graphics.print(backButton, font, love.graphics.getWidth()/2 - 60, 25)
-    love.graphics.setColor(1,1,1,1)
-  end
+end
 
-  for i, keyText in ipairs(keyBindChange) do
-    local keyTextH = font:getHeight(keyText)
-    local keyTexty = (buttonStartY + (i-1) * buttonMargin + (i-1) * button_height)
-    --(window_width * 0.98)
-    love.graphics.printf(keyText, font, window_width - (window_width *.98) , keyTexty + (keyTextH * 0.2) + 80, window_width/2, "center")
-  end
+function keybinds:prepareNewBinding(inputAction) 
+  bindNextKeyPress = {check=true,inputAction=inputAction,currentKey=PlayerInputManager.keyActionAssociations[inputAction]}
+  PlayerInputManager.keyActionAssociations[inputAction] = '...'
 end
 
 function keybinds:keyreleased(key)
 
   if bindNextKeyPress.check then
+    for k,v in pairs(PlayerInputManager.keyActionAssociations) do
+      if v == key then
+        print('key taken')
+        return
+      end
+    end
     PlayerInputManager.input:bind(key, bindNextKeyPress.inputAction)
     PlayerInputManager.keyActionAssociations[bindNextKeyPress.inputAction] = key
     bindNextKeyPress.check = false
   end
 end
 
-function keybinds:newButton(text, fn, inputAction)
-    return {
-      text = text,
-      fn = fn,
-      active = false,
-      inputAction = inputAction,
-    }
+function isInBounds(x1,y1,x2,y2)
+  local mousex, mousey = love.mouse.getPosition()
+  return mousex > x1 and mousex < x2 and mousey > y1 and mousey < y2
 end
 
-function newBackButton(text, fn)
-  return {
-    text = text,
-    fn = fn,
-    active = false
-  }
-end
 
 return keybinds
