@@ -28,8 +28,6 @@ function Grid:initGrid()
 	TimeManager:init()
 	AudioManager:init()
 
-	AudioManager:playtheme()
-
 	for row=1, Constants.gridHeight do
 		self.grid[row] = {}
 		for col=1, Constants.gridWidth do
@@ -130,7 +128,6 @@ function Grid:tick()
 	--print(self.playerBlock.origin.y)
 	if didMove == false then
 		if self.playerBlock.origin.y == 2 then
-			AudioManager:playGameover()
 			Gamestate.push(gameover)
 		end
 		self:placePlayerBlock()	

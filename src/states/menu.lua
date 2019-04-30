@@ -1,12 +1,16 @@
 
 Colors = require 'src.util.colors'
 PlayerInputManager = require 'src.entities.playerinputmanager'
-Sprite = require 'src.util.spriteloader'
 AudioManager = require 'src.entities.audiomanager'
+Sprite = require 'src.util.spriteloader'
 
 local menu = {}
 
 function menu:init()
+  AudioManager:init()
+  AudioManager:playtheme()
+  
+
   self.credits = require 'src.states.credits'
   self.keybinds = require 'src.states.keybinds'
   self.game = require 'src.states.game'
