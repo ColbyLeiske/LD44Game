@@ -3,7 +3,7 @@
 ---
 
 ## Note
-This was written super fast with a two developers learning how to code / write games while doing this. The code is super ugly, but we got a really fun product out of it so I can't complain. I (Colby) thought about making this private because it didn't look pretty, but I think it shows we were really excited to do this no matter what. Thanks!
+This was written super fast with a two developers learning how to code / write games while I (Colby) helped them. The code is super ugly, but we got a really fun product out of it so I can't complain. I thought about making this private because it didn't look pretty, but I think it shows we were really excited to do this no matter what. Thanks!
 
 ## What is Ludum Dare?
 Ludum dare is a Game Programming Jam hosted twice a year where participants get 48 / 72 hours to create a game from scratch. 
